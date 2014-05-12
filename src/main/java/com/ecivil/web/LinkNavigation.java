@@ -10,12 +10,12 @@ public class LinkNavigation {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView homePage() {
-		return new ModelAndView("home");
+		return new ModelAndView("welcome");
 	}
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView indexPage() {
-		return new ModelAndView("home");
+		return new ModelAndView("welcome");
 	}
 
 	@RequestMapping(value = "/sec/moderation", method = RequestMethod.GET)

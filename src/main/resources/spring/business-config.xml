@@ -27,12 +27,8 @@
 
 	<!-- enables scanning for @Transactional annotations -->
 	<tx:annotation-driven />
-
-
-	<!-- ================== 3 Profiles to choose from =================== - 
-		jdbc (uses Spring" JdbcTemplate) - jpa - spring-data-jpa ============================================================================= -->
-
-	<beans profile="jpa,spring-data-jpa">
+	
+	<beans profile="jpa">
 		<!-- JPA EntityManagerFactory -->
 		<bean id="entityManagerFactory"
 			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
@@ -76,24 +72,6 @@
 
 	</beans>
 
-	<beans profile="jdbc">
-		<!-- Transaction manager for a single JDBC DataSource (alternative to JTA) -->
-		<bean id="transactionManager"
-			class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-			p:dataSource-ref="dataSource" />
-
-		<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-			<constructor-arg ref="dataSource" />
-		</bean>
-
-		<bean id="namedParameterJdbcTemplate"
-			class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-			<constructor-arg ref="dataSource" />
-		</bean>
-
-		<context:component-scan base-package="com.ecivil.repository.jdbc" />
-	</beans>
-
 	<beans profile="jpa">
 		<!-- Loads JPA beans Will automatically be transactional due to @Transactional. 
 			EntityManager will be auto-injected due to @PersistenceContext. PersistenceExceptions 
@@ -101,8 +79,5 @@
 		<context:component-scan base-package="com.ecivil.repository.jpa" />
 	</beans>
 
-	<beans profile="spring-data-jpa">
-		<jpa:repositories base-package="com.ecivil.repository.springdatajpa" />
-	</beans>
 
 </beans>

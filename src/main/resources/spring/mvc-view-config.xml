@@ -25,10 +25,7 @@
 			        <!-- Example: a logical view name of 'vets' is mapped to '/WEB-INF/jsp/vets.jsp' -->
 			        <property name="prefix" value="/WEB-INF/jsp/"/>
 			        <property name="suffix" value=".jsp"/>
-			    </bean>
-			
-			    <!-- Used here for 'xml' and 'atom' views  -->
-			    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+			    </bean>		    
         	</list>
         </property>
     </bean>
@@ -42,23 +39,8 @@
         <property name="mediaTypes">
             <map>
                 <entry key="html" value="text/html" />
-                <entry key="xml" value="application/xml" />
-                <entry key="atom" value="application/atom+xml" />
             </map>
         </property>
     </bean>
-
-    <!-- Renders an Atom feed of the visits. Used by the BeanNameViewResolver  -->
-    <bean id="vets/vetList.atom" class="com.ecivil.web.VetsAtomView"/>
-
-    <!-- Renders an XML view. Used by the BeanNameViewResolver  -->
-    <bean id="vets/vetList.xml" class="org.springframework.web.servlet.view.xml.MarshallingView">
-        <property name="marshaller" ref="marshaller"/>
-    </bean>
-
-    <oxm:jaxb2-marshaller id="marshaller">
-        <!-- Object-XML mapping declared using annotations inside 'Vets' -->
-        <oxm:class-to-be-bound name="com.ecivil.model.Vets"/>
-    </oxm:jaxb2-marshaller>
 
 </beans>

@@ -1,7 +1,7 @@
 
 /**
  *
- * The classes in this package represent PetClinic's web presentation layer.
+ * The classes in this package represent Ecivil's web presentation layer.
  *
  */
 package com.ecivil.web;

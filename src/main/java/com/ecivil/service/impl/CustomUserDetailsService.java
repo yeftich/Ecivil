@@ -1,4 +1,4 @@
-package com.ecivil.service;
+package com.ecivil.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,12 +14,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ecivil.model.Role;
 import com.ecivil.repository.UserDao;
 
 
 @Service
 @Transactional(readOnly=true)
 public class CustomUserDetailsService implements UserDetailsService {
+	public static final String ROLE_PREFIX = "ROLE_";
 	
 	@Autowired
 	private UserDao userDAO;	
@@ -28,40 +30,39 @@ public class CustomUserDetailsService implements UserDetailsService {
 			throws UsernameNotFoundException {
 		
 		com.ecivil.model.User domainUser = userDAO.getUser(login);
-		
-		boolean enabled = true;
-		boolean accountNonExpired = true;
-		boolean credentialsNonExpired = true;
-		boolean accountNonLocked = true;
+	
+		if(domainUser != null && domainUser.getRole() != null) {
+			boolean enabled = true;
+			boolean accountNonExpired = true;
+			boolean credentialsNonExpired = true;
+			boolean accountNonLocked = true;
 
-		return new User(
-				domainUser.getLogin(), 
-				domainUser.getPassword(), 
-				enabled, 
-				accountNonExpired, 
-				credentialsNonExpired, 
-				accountNonLocked,
-				getAuthorities(domainUser.getRole().getId())
-		);
+			return new User(
+					domainUser.getLogin(), 
+					domainUser.getPassword(), 
+					enabled, 
+					accountNonExpired, 
+					credentialsNonExpired, 
+					accountNonLocked,
+					getAuthorities(domainUser.getRole())
+			);
+			
+		}
+		else {
+			return null;
+		}
+
 	}
 	
-	public Collection<? extends GrantedAuthority> getAuthorities(Integer role) {
-		List<GrantedAuthority> authList = getGrantedAuthorities(getRoles(role));
+	public Collection<? extends GrantedAuthority> getAuthorities(Role role) {
+		List<String> roles = new ArrayList<String>();
+		if(role != null && !role.getRole().isEmpty()) {
+			roles.add(ROLE_PREFIX + role.getRole());
+		}
+		List<GrantedAuthority> authList = getGrantedAuthorities(roles);
 		return authList;
 	}
 	
-	public List<String> getRoles(Integer role) {
-
-		List<String> roles = new ArrayList<String>();
-
-		if (role.intValue() == 1) {
-			roles.add("ROLE_USER");
-			roles.add("ROLE_ADMIN");
-		} else if (role.intValue() == 2) {
-			roles.add("ROLE_USER");
-		}
-		return roles;
-	}
 	
 	public static List<GrantedAuthority> getGrantedAuthorities(List<String> roles) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

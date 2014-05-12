@@ -37,20 +37,12 @@
     <!-- serve static resources (*.html, ...) from src/main/webapp/ -->
     <mvc:default-servlet-handler/>
 
-   <!--  <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <property name="formatters">
-            <set>
-                <bean class="com.ecivil.web.PetTypeFormatter"/>
-            </set>
-        </property>
-    </bean> -->
-
     <!--
         - Message source for this context, loaded from localized "messages_xx" files.
         - Files are stored inside src/main/resources
     -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basename="messages/messages"/>
+          p:basename="messages/messages" p:defaultEncoding="UTF-8"/>
 
     <!--
         - This bean resolves specific types of exceptions to corresponding logical 

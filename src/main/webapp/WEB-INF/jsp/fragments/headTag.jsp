@@ -6,7 +6,7 @@ ecivil :: a civil protection web application
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Ecivil :: a civil protection web application</title>
+    <title>E-Civil</title>
 
 
     <spring:url value="/webjars/bootstrap/2.3.0/css/bootstrap.min.css" var="bootstrapCss"/>

@@ -23,6 +23,10 @@ public class User {
 	@Column(name = "password", length = 45)
 	@NotEmpty
 	private String password;
+	
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
 
 	@Column(name = "google_account")
 	private String googleAccount;
@@ -45,18 +49,34 @@ public class User {
 	private String telephone;
 
 	@Column(name = "enabled", columnDefinition = "TINYINT(1) DEFAULT 1")
-	@NotEmpty
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	private Boolean enabled = true;
 
 	@Column(name = "verified")
-	@NotEmpty
-	private Boolean verified;
+	private Boolean verified = false;
+	
+	@Column(name = "skill")
+	protected String skill;
+	
+	@Column(name = "blood_group")
+	protected String bloodGroup;
+	
+	@Column(name = "address")
+	protected String address;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "user_name", referencedColumnName = "login") }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") })
 	private Role role;
 
+	public boolean isNew() {
+		if(this.id == null) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public String getLogin() {
 		return login;
 	}
@@ -71,6 +91,38 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getSkill() {
+		return skill;
+	}
+
+	public void setSkill(String skill) {
+		this.skill = skill;
+	}
+
+	public String getBloodGroup() {
+		return bloodGroup;
+	}
+
+	public void setBloodGroup(String bloodGroup) {
+		this.bloodGroup = bloodGroup;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getGoogleAccount() {
