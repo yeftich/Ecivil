@@ -16,11 +16,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class User {
 
 	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
-	
-	@Column(name = "login", length = 45, unique = true)
+	@Column(name = "login", length = 45)
 	@NotEmpty
 	private String login;
 
@@ -28,6 +24,10 @@ public class User {
 	@NotEmpty
 	private String password;
 	
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
+
 	@Column(name = "google_account")
 	private String googleAccount;
 
