@@ -17,9 +17,9 @@ public class RoleDaoImpl implements RoleDao {
     private EntityManager em;
 	
 	@Override
-	public Role getRole(int id) throws DataAccessException {
-		Query query = this.em.createQuery("SELECT DISTINCT role FROM Role role WHERE role.id = :id");
-		query.setParameter("id", id);
+	public Role getRole(String name) throws DataAccessException {
+		Query query = this.em.createQuery("SELECT DISTINCT role FROM Role role WHERE role.role = :name");
+		query.setParameter("name", name);
 		return (Role) query.getSingleResult();
 	}
 

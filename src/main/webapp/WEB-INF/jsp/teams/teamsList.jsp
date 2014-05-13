@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//GR"
     "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -16,39 +17,39 @@
 
 <jsp:include page="../fragments/headTag.jsp" />
 
+
 <body>
 	<div id="main">
 		<jsp:include page="../fragments/header.jsp" />
 		<div class="container">
 			<jsp:include page="../fragments/navBar.jsp" />
-			<h2>Users</h2>
+			<h2>Teams</h2>
 
+		<a href='<spring:url value="/teams/new" htmlEscape="true"/>'
+				class="btn btn-success">Add Team</a> <br />
+				
 			<c:choose>
 				<c:when test="${fn:length(selections) > 0}">
-					<datatables:table id="users" data="${selections}" cdn="true"
-						row="user" theme="bootstrap2" cssClass="table table-striped"
-						paginate="false" info="false">
-						<datatables:column title="Login" property="login" />
-						<datatables:column title="Name" cssStyle="width: 150px;"
-							display="html">
-							<spring:url value="/users/{userId}.html" var="userUrl">
-								<spring:param name="userId" value="${user.id}" />
-							</spring:url>
-							<a href="${fn:escapeXml(userUrl)}"><c:out
-									value="${user.firstName} ${user.lastName}" /></a>
-						</datatables:column>
-						<datatables:column title="Role">
-							<c:out value="${user.role.role}" />
-						</datatables:column>
-						<datatables:column title="Address" property="address"
-							cssStyle="width: 200px;" />
-						<datatables:column title="City" property="city" />
-						<datatables:column title="Telephone" property="telephone" />
-					</datatables:table>
+      				<datatables:table id="teams" data="${selections}" cdn="true"
+					row="team" theme="bootstrap2" cssClass="table table-striped"
+					paginate="false" info="false">
+
+					<datatables:column title="Name" cssStyle="width: 150px;"
+						display="html">
+						<spring:url value="/teams/{teamId}.html" var="teamUrl">
+							<spring:param name="teamId" value="${team.id}" />
+						</spring:url>
+						<a href="${fn:escapeXml(teamUrl)}"><c:out value="${team.name}" /></a>
+					</datatables:column>
+					<datatables:column title="Address" property="address"
+						cssStyle="width: 200px;" />
+					<datatables:column title="Email" property="email" />
+					<datatables:column title="Telephone" property="telephone" />
+				</datatables:table>
 				</c:when>
 
 				<c:otherwise>
-					<H4>No users found</H4>
+					<H4>No teams found</H4>
 				</c:otherwise>
 			</c:choose>
 

@@ -13,6 +13,9 @@
 					class="icon-home"></i> <fmt:message key="navbar.menu.home" /></a></li>
 			<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
 				<li><a
+					href="<spring:url value="/teams.html" htmlEscape="true" />" ><i
+						class="icon-th-list"></i> <fmt:message key="navbar.menu.teams" /></a></li>
+				<li><a
 					href="<spring:url value="/users.html" htmlEscape="true" />" title="<fmt:message key="navbar.menu.users.title"/>"><i
 						class="icon-th-list"></i> <fmt:message key="navbar.menu.users" /></a></li>
 			</security:authorize>

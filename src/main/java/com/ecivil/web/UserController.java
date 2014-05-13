@@ -1,7 +1,6 @@
 package com.ecivil.web;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -18,18 +17,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ecivil.model.User;
+import com.ecivil.service.RoleService;
 import com.ecivil.service.UserService;
 
 @Controller
 public class UserController {
-
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	
 	private final UserService userService;
+	private final RoleService roleService;
 
 	@Autowired
-	public UserController(UserService userService) {
+	public UserController(UserService userService, RoleService roleService) {
 		this.userService = userService;
+		this.roleService = roleService;
 	}
 	
     @InitBinder
@@ -39,6 +44,8 @@ public class UserController {
 
 	@RequestMapping(value = "/users/new", method = RequestMethod.GET)
 	public String initCreationForm(Map<String, Object> model) {
+		logger.debug("initCreationForm for new user");
+		
 		User user = new User();
 		model.put("user", user);
 		return "users/createOrUpdateUserForm";
@@ -47,9 +54,15 @@ public class UserController {
 	@RequestMapping(value = "/users/new", method = RequestMethod.POST)
 	public String processCreationForm(@Valid User user, BindingResult result,
 			SessionStatus status) {
+		logger.debug("proccessCreationForm for new user");
+		
 		if (result.hasErrors()) {
 			return "users/createOrUpdateUserForm";
 		} else {
+			if(user.getRole() == null) {
+				user.setRole(roleService.getDefaultRole());
+			}
+			
 			this.userService.saveUser(user);
 			status.setComplete();
 			return "redirect:/users/" + user.getId();
@@ -70,18 +83,24 @@ public class UserController {
 		// allow parameterless GET request for /users to return all records
 		if (user.getLogin() == null) {
 			results = (List<User>) this.userService.getAllUsers();
+			if (results.isEmpty()) {
+				// no users found
+				model.put("selections", results);
+				return "users/usersList";
+			}
 		} else {
 			// find user by login
 			User userFromDB = this.userService.getUser(user.getLogin());
 			if (userFromDB != null) {
 				results.add(userFromDB);
 			}
+			else {
+				// Searched user not found
+				result.rejectValue("login", "notFound", "not found");
+				return "users/findUsers";
+			}
 		}
-		if (results.isEmpty()) {
-			// no users found
-			result.rejectValue("login", "notFound", "not found");
-			return "users/findUsers";
-		}
+
 		if (results.size() > 1) {
 			// multiple users found
 			model.put("selections", results);

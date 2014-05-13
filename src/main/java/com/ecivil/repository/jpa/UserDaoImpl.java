@@ -27,12 +27,12 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public void saveUser(User user) throws DataAccessException {
-//    	if (user.isNew()) {
+    	if (user.isNew()) {
     		this.em.persist(user);     		
-//    	}
-//    	else {
-//    		this.em.merge(user);    
-//    	}	
+    	}
+    	else {
+    		this.em.merge(user);    
+    	}	
 	}
 
 	@Override

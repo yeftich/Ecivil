@@ -2,14 +2,9 @@ package com.ecivil.model;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.*;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
 
 /**
  * @author Milan
@@ -19,15 +14,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "roles")
 public class Role {
+	
 	@Id
 	@GeneratedValue
+	 @Column(name = "role_id")
 	private Integer id;
 
 	private String role;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "user_name", referencedColumnName = "login") })
-	private Set<User> userRoles;
+
 
 	public Integer getId() {
 		return id;
@@ -45,11 +40,4 @@ public class Role {
 		this.role = role;
 	}
 
-	public Set<User> getUserRoles() {
-		return userRoles;
-	}
-
-	public void setUserRoles(Set<User> userRoles) {
-		this.userRoles = userRoles;
-	}
 }

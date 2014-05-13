@@ -20,34 +20,31 @@
 		<div class="container">
 			<jsp:include page="../fragments/navBar.jsp" />
 
-			<h2>User Information</h2>
+			<h2>Team Information</h2>
 
 			<table class="table table-striped" style="width: 600px;">
 				<tr>
 					<th>Name</th>
-					<td><b><c:out value="${user.firstName} ${user.lastName}" /></b></td>
+					<td><b><c:out value="${team.name}" /></b></td>
 				</tr>
 				<tr>
 					<th>Address</th>
-					<td><c:out value="${user.address}" /></td>
+					<td><c:out value="${team.address}" /></td>
 				</tr>
 				<tr>
-					<th>City</th>
-					<td><c:out value="${user.city}" /></td>
+					<th>Email</th>
+					<td><c:out value="${team.email}" /></td>
 				</tr>
 				<tr>
 					<th>Telephone</th>
-					<td><c:out value="${user.telephone}" /></td>
+					<td><c:out value="${team.telephone}" /></td>
 				</tr>
+
 				<tr>
-					<th>Role</th>
-					<td><c:out value="${user.role.role}" /></td>
-				</tr>
-				<tr>
-					<td><spring:url value="{userId}/edit.html" var="editUrl">
-							<spring:param name="userId" value="${user.id}" />
+					<td><spring:url value="{teamId}/edit.html" var="editUrl">
+							<spring:param name="teamId" value="${team.id}" />
 						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
-							User</a></td>
+							Team</a></td>
 				</tr>
 			</table>
 

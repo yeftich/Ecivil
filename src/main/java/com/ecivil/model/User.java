@@ -1,8 +1,22 @@
 package com.ecivil.model;
 
-import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -16,10 +30,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class User {
 
 	@Id
-	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
-	
+	@Column(name = "user_id")
+	private Integer id;
+
 	@Column(name = "login", length = 45, unique = true)
 	@NotEmpty
 	private String login;
@@ -27,7 +41,7 @@ public class User {
 	@Column(name = "password", length = 45)
 	@NotEmpty
 	private String password;
-	
+
 	@Column(name = "google_account")
 	private String googleAccount;
 
@@ -37,11 +51,11 @@ public class User {
 
 	@Column(name = "first_name")
 	@NotEmpty
-	protected String firstName;
+	private String firstName;
 
 	@Column(name = "last_name")
 	@NotEmpty
-	protected String lastName;
+	private String lastName;
 
 	@Column(name = "telephone")
 	@NotEmpty
@@ -54,29 +68,32 @@ public class User {
 
 	@Column(name = "verified")
 	private Boolean verified = false;
-	
-	@Column(name = "skill")
-	protected String skill;
-	
-	@Column(name = "blood_group")
-	protected String bloodGroup;
-	
-	@Column(name = "address")
-	protected String address;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "user_name", referencedColumnName = "login") }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") })
+	@Column(name = "skill")
+	private String skill;
+
+	@Column(name = "blood_group")
+	private String bloodGroup;
+
+	@Column(name = "address")
+	private String address;
+
+	@OneToOne()
+	@Cascade({ CascadeType.SAVE_UPDATE })
+	@JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "userid", referencedColumnName = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "roleid", referencedColumnName = "role_id") })
 	private Role role;
 
+	@ManyToMany(mappedBy = "users")
+	private Set<Team> teams = new HashSet<Team>();
+
 	public boolean isNew() {
-		if(this.id == null) {
+		if (this.id == null) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	public String getLogin() {
 		return login;
 	}
@@ -92,7 +109,7 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -189,37 +206,11 @@ public class User {
 		this.role = role;
 	}
 
-	//
-	// public Integer getId() {
-	// return id;
-	// }
-	//
-	// public void setId(Integer id) {
-	// this.id = id;
-	// }
-	//
-	// public String getLogin() {
-	// return login;
-	// }
-	//
-	// public void setLogin(String login) {
-	// this.login = login;
-	// }
-	//
-	// public String getPassword() {
-	// return password;
-	// }
-	//
-	// public void setPassword(String password) {
-	// this.password = password;
-	// }
-	//
-	// public Role getRole() {
-	// return role;
-	// }
-	//
-	// public void setRole(Role role) {
-	// this.role = role;
-	// }
+	public Set<Team> getTeams() {
+		return teams;
+	}
 
+	public void setTeams(Set<Team> teams) {
+		this.teams = teams;
+	}
 }

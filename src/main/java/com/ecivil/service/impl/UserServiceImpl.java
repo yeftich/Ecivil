@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ecivil.model.User;
+import com.ecivil.repository.RoleDao;
 import com.ecivil.repository.UserDao;
+import com.ecivil.service.RoleService;
 import com.ecivil.service.UserService;
 
 @Service  
@@ -17,6 +19,8 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired  
 	 private UserDao userDao; 
+	@Autowired
+	private RoleService roleService;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -27,6 +31,9 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional
 	public void saveUser(User user) throws DataAccessException {
+		if(user.getRole() == null ) {
+			user.setRole(roleService.getDefaultRole());
+		}
 		userDao.saveUser(user);
 	}
 
@@ -37,7 +44,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public User findUserById(int userId) throws DataAccessException {
 		return userDao.findUserById(userId);
 	}
