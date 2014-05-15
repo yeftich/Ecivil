@@ -15,26 +15,27 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ecivil.model.Team;
 import com.ecivil.model.User;
 import com.ecivil.service.RoleService;
 import com.ecivil.service.UserService;
 
 @Controller
+@SessionAttributes(types = User.class)
 public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	private final UserService userService;
-	private final RoleService roleService;
 
 	@Autowired
-	public UserController(UserService userService, RoleService roleService) {
+	public UserController(UserService userService) {
 		this.userService = userService;
-		this.roleService = roleService;
 	}
 	
     @InitBinder
@@ -59,11 +60,13 @@ public class UserController {
 		if (result.hasErrors()) {
 			return "users/createOrUpdateUserForm";
 		} else {
-			if(user.getRole() == null) {
-				user.setRole(roleService.getDefaultRole());
+			if(user.isNew()) {
+				this.userService.createUser(user);
+			}
+			else {
+				this.userService.updateUser(user);
 			}
 			
-			this.userService.saveUser(user);
 			status.setComplete();
 			return "redirect:/users/" + user.getId();
 		}
@@ -121,17 +124,29 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/users/{userId}/edit", method = RequestMethod.PUT)
-	public String processUpdateUserForm(User user,
+	public String processUpdateUserForm(@PathVariable("userId") int userId, @Valid User user,
 			BindingResult result, SessionStatus status) {
 		if (result.hasErrors()) {
 			return "users/createOrUpdateUserForm";
 		} else {
-			this.userService.saveUser(user);
+			user.setId(userId);
+			this.userService.updateUser(user);
+//			this.userService.createUser(user);
 			status.setComplete();
 			return "redirect:/users/{userId}";
 		}
 	}
-	
+
+	@RequestMapping(value="/users/{userId}/delete", method=RequestMethod.GET)
+    public ModelAndView deleteUser(@PathVariable Integer userId) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/users");
+        userService.deleteUser(userId);
+        modelAndView.addObject("selections", (List<User>) this.userService.getAllUsers());
+        String message = "User was successfully deleted.";
+        modelAndView.addObject("message", message);
+        return modelAndView;
+    }
+
     /**
      * Custom handler for displaying an user.
      *

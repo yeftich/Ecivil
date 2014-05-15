@@ -6,4 +6,6 @@ import com.ecivil.model.Role;
 
 public interface RoleDao {
 	public Role getRole(String name) throws DataAccessException;
+	
+	public Role getDefaultRole() throws DataAccessException;
 }

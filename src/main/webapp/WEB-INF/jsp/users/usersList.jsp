@@ -44,6 +44,15 @@
 							cssStyle="width: 200px;" />
 						<datatables:column title="City" property="city" />
 						<datatables:column title="Telephone" property="telephone" />
+						<datatables:column display="html">
+							<spring:url value="/users/{userId}/delete.html"
+								var="userDeleteUrl">
+								<spring:param name="userId" value="${user.id}" />
+							</spring:url>
+							<a href='${fn:escapeXml(userDeleteUrl)}'
+								class="btn btn-danger btn-xs">Delete User</a>
+						</datatables:column>
+
 					</datatables:table>
 				</c:when>
 

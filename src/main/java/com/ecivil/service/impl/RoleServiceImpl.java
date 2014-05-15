@@ -20,10 +20,7 @@ public class RoleServiceImpl implements RoleService {
 		return roleDAO.getRole(name);
 	}
 
-	// by default after signing up every user gets ROLE_MEMBER 
-	@Override
-	public Role getDefaultRole() {
-		return roleDAO.getRole("MEMBER");
-	}
+
+
 
 }

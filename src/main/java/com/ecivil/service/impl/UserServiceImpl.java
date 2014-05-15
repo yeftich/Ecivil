@@ -1,6 +1,5 @@
 package com.ecivil.service.impl;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ecivil.model.User;
 import com.ecivil.repository.RoleDao;
 import com.ecivil.repository.UserDao;
-import com.ecivil.service.RoleService;
 import com.ecivil.service.UserService;
 
 @Service  
@@ -20,7 +18,7 @@ public class UserServiceImpl implements UserService{
 	@Autowired  
 	 private UserDao userDao; 
 	@Autowired
-	private RoleService roleService;
+	private RoleDao roleDao;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -30,11 +28,11 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public void saveUser(User user) throws DataAccessException {
+	public void createUser(User user) throws DataAccessException {
 		if(user.getRole() == null ) {
-			user.setRole(roleService.getDefaultRole());
+			user.setRole(roleDao.getDefaultRole());
 		}
-		userDao.saveUser(user);
+		userDao.insertUser(user);
 	}
 
 	@Override
@@ -47,6 +45,20 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public User findUserById(int userId) throws DataAccessException {
 		return userDao.findUserById(userId);
+	}
+
+	@Override
+	@Transactional
+	public void updateUser(User user) throws DataAccessException {
+		if(user.getId() != null) {
+			userDao.updateUser(user);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void deleteUser(int userId) throws DataAccessException {
+			userDao.deleteUser(userId);
 	}
 
 }

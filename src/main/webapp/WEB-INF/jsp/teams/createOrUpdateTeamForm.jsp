@@ -38,6 +38,12 @@
 			<form:form modelAttribute="team" method="${method}"
 				class="form-horizontal" id="add-team-form">
 				<ecivil:inputField label="Team Name" name="name" />
+				<div class="control-group">
+					<ecivil:selectField name="type" label="Type " names="${teamtypes}"	size="2" />
+				</div>
+				<div class="control-group">
+					<ecivil:selectField name="admin" label="Administrator " names="${users}"	size="5" />
+				</div>
 				<ecivil:inputField label="Address" name="address" />
 				<ecivil:inputField label="Email" name="email" />
 				<ecivil:inputField label="Telephone" name="telephone" />

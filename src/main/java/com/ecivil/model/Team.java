@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 
@@ -52,6 +53,14 @@ public class Team {
     @JoinTable(name = "teams_users", joinColumns = @JoinColumn(name = "teamid", referencedColumnName = "team_id", insertable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "userid", referencedColumnName = "user_id", insertable = false, updatable = false))
     private Set<User> users = new HashSet<User>();
+    
+    @ManyToOne
+    @JoinColumn(name = "t_type")
+    private TeamType type;
+    
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private User admin;
 
 	public Team() {
 	}
@@ -116,6 +125,23 @@ public class Team {
 	public void addUser(User user) {
 		this.users.add(user);
 	}
+
+	public TeamType getType() {
+		return type;
+	}
+
+	public void setType(TeamType type) {
+		this.type = type;
+	}
+
+	public User getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(User admin) {
+		this.admin = admin;
+	}
+	
 	
 	
 	

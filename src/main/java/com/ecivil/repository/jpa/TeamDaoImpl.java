@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.ecivil.model.Team;
+import com.ecivil.model.TeamType;
 import com.ecivil.repository.TeamDao;
 
 @Repository
@@ -48,5 +49,16 @@ public class TeamDaoImpl implements TeamDao {
 	        query.setParameter("name", name );
 	        return (Team)query.getSingleResult();
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<TeamType> getAllTeamTypes() throws DataAccessException {
+		Query query = this.em.createQuery("from TeamType");
+		return query.getResultList();
+	}
 
+	@Override
+	public void deleteTeam(int teamId) throws DataAccessException {
+		this.em.remove(findTeamById(teamId));
+	}
 }

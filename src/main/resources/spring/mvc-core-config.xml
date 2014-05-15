@@ -23,7 +23,7 @@
     <context:component-scan
             base-package="com.ecivil.web"/>
 
-    <mvc:annotation-driven /><!-- conversion-service="conversionService"/> -->
+    <mvc:annotation-driven conversion-service="conversionService"/> 
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be refered to inside JSP files
         (see header.jsp for more details) -->
@@ -36,6 +36,16 @@
 
     <!-- serve static resources (*.html, ...) from src/main/webapp/ -->
     <mvc:default-servlet-handler/>
+
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="com.ecivil.web.formatter.TeamTypeFormatter" />
+                <bean class="com.ecivil.web.formatter.UserFormatter" />
+            </set>
+        </property>
+    </bean>
+
 
     <!--
         - Message source for this context, loaded from localized "messages_xx" files.

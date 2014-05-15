@@ -28,6 +28,14 @@
 					<td><b><c:out value="${team.name}" /></b></td>
 				</tr>
 				<tr>
+					<th>Type</th>
+					<td><b><c:out value="${team.type.name}" /></b></td>
+				</tr>
+				<tr>
+					<th>Administrator</th>
+					<td><b><c:out value="${team.admin.login}" /></b></td>
+				</tr>
+				<tr>
 					<th>Address</th>
 					<td><c:out value="${team.address}" /></td>
 				</tr>

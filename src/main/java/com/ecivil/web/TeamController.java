@@ -1,6 +1,7 @@
 package com.ecivil.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -14,32 +15,49 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ecivil.model.Team;
-import com.ecivil.service.RoleService;
+import com.ecivil.model.TeamType;
+import com.ecivil.model.User;
 import com.ecivil.service.TeamService;
+import com.ecivil.service.UserService;
 
 @Controller
+@SessionAttributes("team")
 public class TeamController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(TeamController.class);
 
 	private final TeamService teamService;
+	private final UserService userService;
 
 	@Autowired
-	public TeamController(TeamService teamService, RoleService roleService) {
+	public TeamController(TeamService teamService, UserService userService) {
 		this.teamService = teamService;
+		this.userService = userService;
 	}
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id");
 	}
+	
+    @ModelAttribute("teamtypes")
+    public Collection<TeamType> populateTeamTypes() {
+        return this.teamService.getAllTeamTypes();
+    }
+    
+    @ModelAttribute("users")
+    public Collection<User> populateUsers() {
+        return this.userService.getAllUsers();
+    }
 
 	@RequestMapping(value = "/teams/new", method = RequestMethod.GET)
 	public String initCreationForm(Map<String, Object> model) {
@@ -51,7 +69,7 @@ public class TeamController {
 	}
 
 	@RequestMapping(value = "/teams/new", method = RequestMethod.POST)
-	public String processCreationForm(@Valid Team team, BindingResult result,
+	public String processCreationForm(@ModelAttribute("team") Team team, BindingResult result,
 			SessionStatus status) {
 		logger.debug("proccessCreationForm for new team");
 
@@ -102,17 +120,30 @@ public class TeamController {
 	}
 
 	@RequestMapping(value = "/teams/{teamId}/edit", method = RequestMethod.PUT)
-	public String processUpdateTeamForm(Team team, BindingResult result,
+	public String processUpdateTeamForm(@PathVariable("teamId") int teamId, Team team, BindingResult result,
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			return "teams/createOrUpdateTeamForm";
 		} else {
+			if(team.getId() == null) {
+				team.setId(teamId);
+			}
 			this.teamService.saveTeam(team);
 			status.setComplete();
 			return "redirect:/teams/{teamId}";
 		}
 	}
 
+	@RequestMapping(value="/teams/{teamId}/delete", method=RequestMethod.GET)
+    public ModelAndView deleteTeam(@PathVariable Integer teamId) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/teams");
+        teamService.deleteTeam(teamId);
+        modelAndView.addObject("selections", (List<Team>) this.teamService.getAllTeams());
+        String message = "Team was successfully deleted.";
+        modelAndView.addObject("message", message);
+        return modelAndView;
+    }
+	
 	/**
 	 * Custom handler for displaying an team.
 	 * 

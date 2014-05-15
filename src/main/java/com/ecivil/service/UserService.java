@@ -9,9 +9,13 @@ import com.ecivil.model.User;
 public interface UserService {
 	public User getUser(String login) throws DataAccessException;
 
-	public void saveUser(User user) throws DataAccessException;
+	public void createUser(User user) throws DataAccessException;
 
 	public List<User> getAllUsers() throws DataAccessException;
 
-	public User findUserById(int userId) throws DataAccessException;  
+	public User findUserById(int userId) throws DataAccessException;
+
+	public void updateUser(User user)  throws DataAccessException;
+
+	public void deleteUser(int userId)  throws DataAccessException;
 }

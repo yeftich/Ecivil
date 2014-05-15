@@ -46,8 +46,7 @@
 				<tr>
 					<td><spring:url value="{userId}/edit.html" var="editUrl">
 							<spring:param name="userId" value="${user.id}" />
-						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
-							User</a></td>
+						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit User</a></td>
 				</tr>
 			</table>
 

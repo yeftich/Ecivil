@@ -1,10 +1,11 @@
-13/05/2014
+14/05/2014
 
-	-	Create new team
+	-	Delete team
 	
-	-	Update team
+	-	Delete user
 	
-	-	Search team
+	-	Create team administrator 
 	
-	-	Assign ROLE_MEMBER to a new user on sign up
+	-	Automatic changing of a users role to INSTITUTIONS_ADMIN or VOLUNTEERS_ADMIN, for the user who becomed team administrator
 
+	-	Changing team administrator

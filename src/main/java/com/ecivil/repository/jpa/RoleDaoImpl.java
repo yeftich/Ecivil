@@ -23,4 +23,11 @@ public class RoleDaoImpl implements RoleDao {
 		return (Role) query.getSingleResult();
 	}
 
+	@Override
+	public Role getDefaultRole() throws DataAccessException {
+		Query query = this.em.createQuery("SELECT DISTINCT role FROM Role role WHERE role.role = :name");
+		query.setParameter("name", "MEMBER");
+		return (Role) query.getSingleResult();
+	}
+
 }
