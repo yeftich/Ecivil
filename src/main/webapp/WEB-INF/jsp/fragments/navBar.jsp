@@ -11,13 +11,20 @@
 			<li><a
 				href="<spring:url value="/" htmlEscape="true" />"><i
 					class="icon-home"></i> <fmt:message key="navbar.menu.home" /></a></li>
-			<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
+			<security:authorize access="hasAnyRole('ROLE_ADMIN')">
 				<li><a
 					href="<spring:url value="/teams.html" htmlEscape="true" />" ><i
-						class="icon-th-list"></i> <fmt:message key="navbar.menu.teams" /></a></li>
+						class="icon-th-large"></i> <fmt:message key="navbar.menu.teams" /></a></li>
 				<li><a
 					href="<spring:url value="/users.html" htmlEscape="true" />" title="<fmt:message key="navbar.menu.users.title"/>"><i
-						class="icon-th-list"></i> <fmt:message key="navbar.menu.users" /></a></li>
+						class="icon-user"></i> <fmt:message key="navbar.menu.users" /></a></li>
+			</security:authorize>
+			
+			<security:authorize access="hasAnyRole('ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
+				<li><a
+					href="<spring:url value="/users/manage.html" htmlEscape="true" />" ><i
+						class="icon-user"></i> <fmt:message key="navbar.menu.manageTeams" /></a></li>
+				<li>
 			</security:authorize>
 		</ul>
 	</div>

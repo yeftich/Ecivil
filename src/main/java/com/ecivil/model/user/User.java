@@ -1,24 +1,35 @@
-package com.ecivil.model;
+package com.ecivil.model.user;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.ecivil.enums.Verifications;
+import com.ecivil.model.Role;
+import com.ecivil.model.team.Team;
 
 /**
  * @author Milan
@@ -27,7 +38,9 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 4318644128187461064L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,8 +96,13 @@ public class User {
 	@JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "userid", referencedColumnName = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "roleid", referencedColumnName = "role_id") })
 	private Role role;
 
-	@ManyToMany(mappedBy = "users")
-	private Set<Team> teams = new HashSet<Team>();
+//	// temporal list of teams that user choose to sign up
+//	@Transient
+//	private List<Team> teams = new ArrayList<Team>();
+	
+//	@ManyToMany(mappedBy = "users")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.user", cascade=javax.persistence.CascadeType.ALL)
+	private Set<UserTeam> userTeams = new HashSet<UserTeam>(0);
 
 	public boolean isNew() {
 		if (this.id == null) {
@@ -206,11 +224,36 @@ public class User {
 		this.role = role;
 	}
 
-	public Set<Team> getTeams() {
-		return teams;
+	public Set<UserTeam> getUserTeams() {
+		return userTeams;
 	}
 
-	public void setTeams(Set<Team> teams) {
-		this.teams = teams;
+	public void setUserTeams(Set<Team> teams) {
+		for(Team team : teams) {
+			if(!containsTeam(team)) {
+				UserTeam userTeam = new UserTeam(new Date(), Verifications.Unverified.inGreek());
+				userTeam.setUser(this);
+				userTeam.setTeam(team);
+				this.userTeams.add(userTeam);
+			}
+		}
 	}
+	
+	private boolean containsTeam(Team team) {
+		for(UserTeam userTeam : userTeams) {
+			if(userTeam.getTeam().getId() == team.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+//	public List<Team> getTeams() {
+//		return teams;
+//	}
+//
+//	public void setTeams(List<Team> teams) {
+//		this.teams = teams;
+//	}
+	
 }

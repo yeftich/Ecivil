@@ -1,6 +1,9 @@
-package com.ecivil.model;
+package com.ecivil.model.team;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,10 +16,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.ecivil.model.user.User;
+import com.ecivil.model.user.UserTeam;
+
 
 /**
  * @author Milan
@@ -25,8 +33,10 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "teams")
-public class Team {
+public class Team implements Serializable {
 	
+	private static final long serialVersionUID = 8740649794332028426L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "team_id")
@@ -49,10 +59,12 @@ public class Team {
 	@NotEmpty
 	private String email;
 	
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "teams_users", joinColumns = @JoinColumn(name = "teamid", referencedColumnName = "team_id", insertable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "userid", referencedColumnName = "user_id", insertable = false, updatable = false))
-    private Set<User> users = new HashSet<User>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "teams_users", joinColumns = @JoinColumn(name = "teamid", referencedColumnName = "team_id", insertable = false, updatable = false),
+//            inverseJoinColumns = @JoinColumn(name = "userid", referencedColumnName = "user_id", insertable = false, updatable = false))
+//    private Set<User> users = new HashSet<User>();
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.team")
+	private Set<UserTeam> userTeams = new HashSet<UserTeam>(0);
     
     @ManyToOne
     @JoinColumn(name = "t_type")
@@ -114,17 +126,25 @@ public class Team {
 		this.email = email;
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
 	
-	public void addUser(User user) {
-		this.users.add(user);
+	public Set<UserTeam> getUserTeams() {
+		return this.userTeams;
 	}
+ 
+	public void setUserTeams(Set<UserTeam> userTeams) {
+		this.userTeams = userTeams;
+	}
+//	public Set<User> getUsers() {
+//		return users;
+//	}
+//
+//	public void setUsers(Set<User> users) {
+//		this.users = users;
+//	}
+//	
+//	public void addUser(User user) {
+//		this.users.add(user);
+//	}
 
 	public TeamType getType() {
 		return type;
@@ -140,6 +160,16 @@ public class Team {
 
 	public void setAdmin(User admin) {
 		this.admin = admin;
+	}
+
+	public List<User> getTeamMembers() {
+		List<User> members = new ArrayList<User>();
+		
+		for(UserTeam userTeam : userTeams) {
+			members.add(userTeam.getUser());
+		}
+		
+		return members;
 	}
 	
 	

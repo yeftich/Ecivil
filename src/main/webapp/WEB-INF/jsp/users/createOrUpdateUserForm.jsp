@@ -35,16 +35,61 @@
 				<c:if test="${user['new']}">New </c:if>
 				User
 			</h2>
+
+
+
 			<form:form modelAttribute="user" method="${method}"
 				class="form-horizontal" id="add-user-form">
-				<ecivil:inputField label="Login" name="login" />
-				<ecivil:passwordField label="Password" name="password" />
-				<ecivil:inputField label="Google account" name="googleAccount" />
-				<ecivil:inputField label="First Name" name="firstName" />
-				<ecivil:inputField label="Last Name" name="lastName" />
-				<ecivil:inputField label="Address" name="address" />
-				<ecivil:inputField label="City" name="city" />
-				<ecivil:inputField label="Telephone" name="telephone" />
+				<%-- <form:errors path="*" cssClass="errorblock" element="div" /> --%>
+				<table>
+					<tr>
+						<td>Login:</td>
+						<td><form:input path="login" /></td>
+						<td><form:errors path="login" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>Password:</td>
+						<td><form:password path="password" /></td>
+						<td><form:errors path="password" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>Google account:</td>
+						<td><form:input path="googleAccount" /></td>
+						<td><form:errors path="googleAccount" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>First Name:</td>
+						<td><form:input path="firstName" /></td>
+						<td><form:errors path="firstName" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>Last Name:</td>
+						<td><form:input path="lastName" /></td>
+						<td><form:errors path="lastName" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>Address:</td>
+						<td><form:input path="address" /></td>
+						<td><form:errors path="address" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>City:</td>
+						<td><form:input path="city" /></td>
+						<td><form:errors path="city" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>Telephone:</td>
+						<td><form:input path="telephone" /></td>
+						<td><form:errors path="telephone" cssClass="error" /></td>
+					</tr>
+					<tr>
+						<td>Teams :</td>
+						<td><form:select path="userTeams" items="${teamList}"
+								multiple="true" /></td>
+						<td><form:errors path="userTeams" cssClass="error" /></td>
+					</tr>
+				</table>
+
 
 				<div class="form-actions">
 					<c:choose>
@@ -56,6 +101,7 @@
 						</c:otherwise>
 					</c:choose>
 				</div>
+
 			</form:form>
 		</div>
 		<jsp:include page="../fragments/footer.jsp" />

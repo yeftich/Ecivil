@@ -12,7 +12,6 @@
 
 				<a href="<spring:url value="/user-login.html" htmlEscape="true" />"
 					class="bubble"><fmt:message key="header.user.login" /></a>
-				<!-- <a href="signIn.jsp" class="bubble"> ΕΙΣΟΔΟΣ </a> -->
 			</div>
 		</security:authorize>
 
@@ -21,14 +20,13 @@
 			<div class="headerWidget">
 				<a href="<spring:url value="/users/new" htmlEscape="true" />"
 					class="bubble"><fmt:message key="header.user.signup" /></a>
-				<!-- <a href="signUp.jsp" class="bubble"> ΝΕΟ ΜΕΛΟΣ </a> -->
 			</div>
 		</security:authorize>
 
 		<!--signOut widget-->
 		<security:authorize access="isAuthenticated()">
 			<div class="headerWidget">
-				<a href="<spring:url value="j_spring_security_logout" htmlEscape="true" />" 
+				<a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />" 
 				class="bubble"><fmt:message key="header.user.logout" /></a>
 			</div>
 		</security:authorize>

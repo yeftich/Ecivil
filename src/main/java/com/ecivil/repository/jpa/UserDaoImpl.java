@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
-import com.ecivil.model.User;
+import com.ecivil.enums.Verifications;
+import com.ecivil.model.user.User;
 import com.ecivil.repository.UserDao;
 
 @Repository
@@ -59,6 +60,21 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void deleteUser(int userId) throws DataAccessException {
 			this.em.remove(findUserById(userId));
+	}
+
+	@Override
+	public void verifyUser(int userId, int teamId) throws DataAccessException {
+		logger.debug("VERIFYING USER with userId " + userId + " for team with teamId " + teamId);
+		
+//		String sqlScript = "UPDATE user_team SET STATUS=\'"+ Verifications.Verified + 
+//				"\' WHERE USERID=" + userId + " AND TEAMID=" + teamId;
+		
+		Query query = this.em.createNamedQuery("updateStatusNativeSQL")
+			.setParameter("status", Verifications.Verified.inGreek())
+			.setParameter("userId", userId)
+			.setParameter("teamId", teamId);
+
+		query.executeUpdate();
 	}
 
 }

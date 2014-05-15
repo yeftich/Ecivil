@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String login)
 			throws UsernameNotFoundException {
 		
-		com.ecivil.model.User domainUser = userDAO.getUser(login);
+		com.ecivil.model.user.User domainUser = userDAO.getUser(login);
 	
 		if(domainUser != null && domainUser.getRole() != null) {
 			boolean enabled = true;

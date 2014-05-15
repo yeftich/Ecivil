@@ -9,16 +9,17 @@ import javax.persistence.Query;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
-import com.ecivil.model.Team;
-import com.ecivil.model.TeamType;
+import com.ecivil.model.team.Team;
+import com.ecivil.model.team.TeamType;
+import com.ecivil.model.user.User;
 import com.ecivil.repository.TeamDao;
 
 @Repository
 public class TeamDaoImpl implements TeamDao {
 
-    @PersistenceContext
-    private EntityManager em;
-    
+	@PersistenceContext
+	private EntityManager em;
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Team> getAllTeams() throws DataAccessException {
@@ -28,28 +29,29 @@ public class TeamDaoImpl implements TeamDao {
 
 	@Override
 	public void saveTeam(Team team) {
-    	if (team.isNew()) {
-    		this.em.persist(team);     		
-    	}
-    	else {
-    		this.em.merge(team);    
-    	}			
+		if (team.isNew()) {
+			this.em.persist(team);
+		} else {
+			this.em.merge(team);
+		}
 	}
 
 	@Override
 	public Team findTeamById(int teamId) {
-		Query query = this.em.createQuery("SELECT DISTINCT team FROM Team team WHERE team.id = :teamId");
-        query.setParameter("teamId", teamId );
-        return (Team)query.getSingleResult();
+		Query query = this.em
+				.createQuery("SELECT DISTINCT team FROM Team team WHERE team.id = :teamId");
+		query.setParameter("teamId", teamId);
+		return (Team) query.getSingleResult();
 	}
 
 	@Override
 	public Team getTeamByName(String name) {
-		 Query query = this.em.createQuery("SELECT DISTINCT team FROM Team team WHERE team.name = :name");
-	        query.setParameter("name", name );
-	        return (Team)query.getSingleResult();
+		Query query = this.em
+				.createQuery("SELECT DISTINCT team FROM Team team WHERE team.name = :name");
+		query.setParameter("name", name);
+		return (Team) query.getSingleResult();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<TeamType> getAllTeamTypes() throws DataAccessException {
@@ -61,4 +63,14 @@ public class TeamDaoImpl implements TeamDao {
 	public void deleteTeam(int teamId) throws DataAccessException {
 		this.em.remove(findTeamById(teamId));
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Team> getTeamsByAdmin(User admin) throws DataAccessException {
+		Query query = this.em
+				.createQuery("SELECT DISTINCT team FROM Team team WHERE team.admin = :admin");
+		query.setParameter("admin", admin);
+		return (List<Team>) query.getResultList();
+	}
+
 }

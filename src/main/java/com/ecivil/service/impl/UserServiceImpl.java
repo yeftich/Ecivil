@@ -7,8 +7,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ecivil.model.User;
+import com.ecivil.model.user.User;
 import com.ecivil.repository.RoleDao;
+import com.ecivil.repository.TeamDao;
 import com.ecivil.repository.UserDao;
 import com.ecivil.service.UserService;
 
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService{
 	 private UserDao userDao; 
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private TeamDao teamDao;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -59,6 +62,12 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public void deleteUser(int userId) throws DataAccessException {
 			userDao.deleteUser(userId);
+	}
+
+	@Override
+	@Transactional
+	public void verifyUser(int userId, int teamId) throws DataAccessException {
+		userDao.verifyUser(userId, teamId);
 	}
 
 }

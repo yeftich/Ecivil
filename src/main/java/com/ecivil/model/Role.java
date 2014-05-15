@@ -1,10 +1,13 @@
 package com.ecivil.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.Cascade;
+
+import com.ecivil.util.ConstantUtil;
 
 /**
  * @author Milan
@@ -13,8 +16,10 @@ import org.hibernate.annotations.Cascade;
  */
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements Serializable  {
 	
+	private static final long serialVersionUID = -1977800691596341296L;
+
 	@Id
 	@GeneratedValue
 	 @Column(name = "role_id")
@@ -38,6 +43,30 @@ public class Role {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	public boolean isAdmin() {
+		return this.role.equals(ConstantUtil.ROLE_ADMIN);
+	}
+	
+	public boolean isAdminVolunteer() {
+		return this.role.equals(ConstantUtil.ROLE_VOLUNTEERS_ADMIN);
+	}
+
+	public boolean isAdminInstitution() {
+		return this.role.equals(ConstantUtil.ROLE_INSTITUTIONS_ADMIN);
+	}
+
+	public boolean isVolunteer() {
+		return this.role.equals(ConstantUtil.ROLE_VOLUNTEER);
+	}
+
+	public boolean isInstitution() {
+		return this.role.equals(ConstantUtil.ROLE_INSTITUTION);
+	}
+
+	public boolean isMemeber() {
+		return this.role.equals(ConstantUtil.ROLE_MEMBER);
 	}
 
 }

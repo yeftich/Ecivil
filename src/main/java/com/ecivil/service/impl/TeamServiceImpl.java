@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ecivil.model.Role;
-import com.ecivil.model.Team;
-import com.ecivil.model.TeamType;
-import com.ecivil.model.User;
+import com.ecivil.model.team.Team;
+import com.ecivil.model.team.TeamType;
+import com.ecivil.model.user.User;
 import com.ecivil.repository.RoleDao;
 import com.ecivil.repository.TeamDao;
 import com.ecivil.repository.UserDao;
@@ -88,6 +88,14 @@ public class TeamServiceImpl implements TeamService {
 	@Transactional
 	public void deleteTeam(int teamId) throws DataAccessException {
 		teamDao.deleteTeam(teamId);
+	}
+
+	@Override
+	@Transactional
+	public List<Team> getManagedTeams(String login) throws DataAccessException {
+		
+		User admin = userDao.getUser(login);
+		return (List<Team>)teamDao.getTeamsByAdmin(admin);
 	}
 
 }

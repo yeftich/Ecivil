@@ -1,17 +1,21 @@
-package com.ecivil.web;
+package com.ecivil.web.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,9 +25,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ecivil.model.Team;
-import com.ecivil.model.User;
+import com.ecivil.model.Role;
+import com.ecivil.model.team.Team;
+import com.ecivil.model.team.TeamType;
+import com.ecivil.model.user.User;
+import com.ecivil.model.user.UserTeam;
 import com.ecivil.service.RoleService;
+import com.ecivil.service.TeamService;
 import com.ecivil.service.UserService;
 
 @Controller
@@ -33,14 +41,22 @@ public class UserController {
 	
 	private final UserService userService;
 
+	private final TeamService teamService;
+
 	@Autowired
-	public UserController(UserService userService) {
+	public UserController(UserService userService, TeamService teamService) {
 		this.userService = userService;
+		this.teamService = teamService;
 	}
 	
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
+    }
+    
+    @ModelAttribute("teamList")
+    public Collection<Team> populateTeamList() {
+        return this.teamService.getAllTeams();
     }
 
 	@RequestMapping(value = "/users/new", method = RequestMethod.GET)
@@ -159,4 +175,34 @@ public class UserController {
         mav.addObject(this.userService.findUserById(userId));
         return mav;
     }
+    
+    
+	// showing the page where team administrator can mange the members of his team
+	@RequestMapping(value = "/users/manage", method = RequestMethod.GET)
+	public String initManageForm(Map<String, Object> model) {
+		logger.debug("initManageForm for menaging users");
+
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		String login = auth.getName(); // get logged in username
+		logger.debug("User " + login + " is trying to manage users in its teams");
+		
+		List<Team> teams = teamService.getManagedTeams(login);
+		List<UserTeam> userTeams = new ArrayList<UserTeam>();
+		for(Team team : teams) {
+			userTeams.addAll(team.getUserTeams());
+		}
+		model.put("userTeams", userTeams);
+		return "users/manageUsers";
+	}
+	
+	@RequestMapping(value="/users/{userId}/teams/{teamId}/verify")
+	public String verifyMember(@PathVariable("userId") int userId, @PathVariable("teamId") int teamId) {
+		
+		userService.verifyUser(userId, teamId);
+		logger.debug("USER VERIFIED SUCCESSFULLY!");
+		
+		return "redirect:/users/manage";
+		
+	}
 }

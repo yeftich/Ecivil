@@ -1,4 +1,4 @@
-package com.ecivil.web;
+package com.ecivil.web.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ecivil.model.Team;
-import com.ecivil.model.TeamType;
-import com.ecivil.model.User;
+import com.ecivil.model.team.Team;
+import com.ecivil.model.team.TeamType;
+import com.ecivil.model.user.User;
 import com.ecivil.service.TeamService;
 import com.ecivil.service.UserService;
 

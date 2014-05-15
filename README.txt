@@ -1,11 +1,10 @@
-14/05/2014
+15/05/2014
 
-	-	Delete team
-	
-	-	Delete user
-	
-	-	Create team administrator 
-	
-	-	Automatic changing of a users role to INSTITUTIONS_ADMIN or VOLUNTEERS_ADMIN, for the user who becomed team administrator
+	-	Applying for a team member 
 
-	-	Changing team administrator
+	-	Verifying users as a team member by the team administrator
+	
+	-	Removing user from a team
+	
+	-	Seting responsibility of a team member by the team administrator
+

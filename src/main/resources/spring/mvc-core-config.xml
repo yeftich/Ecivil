@@ -42,6 +42,7 @@
             <set>
                 <bean class="com.ecivil.web.formatter.TeamTypeFormatter" />
                 <bean class="com.ecivil.web.formatter.UserFormatter" />
+                <bean class="com.ecivil.web.formatter.TeamFormatter" />
             </set>
         </property>
     </bean>

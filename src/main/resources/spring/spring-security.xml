@@ -19,8 +19,7 @@ access="hasAnyRole(‘student’, ‘admin’)" /> -->
 		<form-login login-page="/user-login.html"
 			default-target-url="/success-login.html" authentication-failure-url="/error-login.html" />
 			
-		<logout logout-success-url="/index.html" />
-		
+		<logout logout-success-url="/" logout-url="/j_spring_security_logout" />
 	</http>
 
 	<authentication-manager>
