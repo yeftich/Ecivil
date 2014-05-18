@@ -9,8 +9,19 @@
 	<div class="navbar-inner">
 		<ul class="nav">
 			<li><a
-				href="<spring:url value="/" htmlEscape="true" />"><i
+				href="<spring:url value="/emergencys.html" htmlEscape="true" />"><i
 					class="icon-home"></i> <fmt:message key="navbar.menu.home" /></a></li>
+			<security:authorize access="isAuthenticated()">
+				<li><a
+					href="<spring:url value="/accidents.html" htmlEscape="true" />" ><i
+						class="icon-warning-sign"></i> <fmt:message key="navbar.menu.accidents" /></a></li>
+				<li>
+				<li><a
+					href="<spring:url value="/dangers.html" htmlEscape="true" />" ><i
+						class="icon-flag"></i> <fmt:message key="navbar.menu.dangers" /></a></li>
+				<li>
+				</security:authorize>
+
 			<security:authorize access="hasAnyRole('ROLE_ADMIN')">
 				<li><a
 					href="<spring:url value="/teams.html" htmlEscape="true" />" ><i
@@ -26,6 +37,8 @@
 						class="icon-user"></i> <fmt:message key="navbar.menu.manageTeams" /></a></li>
 				<li>
 			</security:authorize>
+
+			
 		</ul>
 	</div>
 </div>

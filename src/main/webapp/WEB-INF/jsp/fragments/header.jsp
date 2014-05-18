@@ -9,9 +9,15 @@
 		<!--signIn widget-->
 		<security:authorize access="isAnonymous()">
 			<div class="headerWidget">
-
 				<a href="<spring:url value="/user-login.html" htmlEscape="true" />"
 					class="bubble"><fmt:message key="header.user.login" /></a>
+			</div>
+		</security:authorize>
+
+		<security:authorize access="isAuthenticated()">
+			<div class="headerWidget">
+				Welcome
+				<security:authentication property="principal.Username" />
 			</div>
 		</security:authorize>
 
@@ -26,8 +32,9 @@
 		<!--signOut widget-->
 		<security:authorize access="isAuthenticated()">
 			<div class="headerWidget">
-				<a href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />" 
-				class="bubble"><fmt:message key="header.user.logout" /></a>
+				<a
+					href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />"
+					class="bubble"><fmt:message key="header.user.logout" /></a>
 			</div>
 		</security:authorize>
 	</div>
@@ -38,7 +45,11 @@
 	</a>
 
 
-	<h1 id="logoText"><fmt:message key="header.logo.text" /></h1>
+	<h1 id="logoText">
+		<fmt:message key="header.logo.text" />
+	</h1>
+
+
 </div>
 
 

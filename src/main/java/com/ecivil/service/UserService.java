@@ -7,6 +7,9 @@ import org.springframework.dao.DataAccessException;
 import com.ecivil.model.user.User;
 
 public interface UserService {
+	
+	public User getLoggedInUser();
+	
 	public User getUser(String login) throws DataAccessException;
 
 	public void createUser(User user) throws DataAccessException;
@@ -20,4 +23,8 @@ public interface UserService {
 	public void deleteUser(int userId)  throws DataAccessException;
 	
 	public void verifyUser(int userId, int teamId) throws DataAccessException;
+
+	public void addUserResponsibility(int userId, int teamId, String responsStr) throws DataAccessException;
+
+	public void removeUserFromTeam(int userId, int teamId) throws DataAccessException;
 }

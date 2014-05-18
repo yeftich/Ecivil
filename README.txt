@@ -1,10 +1,11 @@
-15/05/2014
+18/05/2014
 
-	-	Applying for a team member 
+	-	F06   -  Δήλωση του συμβάντος μέσω του συστήματος
 
-	-	Verifying users as a team member by the team administrator
+	-	F08  -  Όλη οι χρήστες βλέπουν πληροφορίες σχετικά με τα επίκαιρα συμβάντα
 	
-	-	Removing user from a team
+	-	F10  -   Kλείσιμο συμβάντος από τον χρήστη που το έχει δηλώσει
 	
-	-	Seting responsibility of a team member by the team administrator
+	-	F11   -  Kλείσιμο συμβάντος από διαχειριστές και τους εθελοντές
+	
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//GR"
-    "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -11,8 +9,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="datatables"
 	uri="http://github.com/dandelion/datatables"%>
-
-<html lang="en">
 
 <jsp:include page="../fragments/headTag.jsp" />
 
@@ -29,11 +25,11 @@
 					<datatables:table id="users" data="${userTeams}" cdn="true"
 						row="userTeam" theme="bootstrap2" cssClass="table table-striped"
 						paginate="false" info="false">
-						
+
 						<datatables:column title="Login">
 							<c:out value="${userTeam.user.login}" />
 						</datatables:column>
-						
+
 						<datatables:column title="Name" cssStyle="width: 150px;"
 							display="html">
 							<spring:url value="/users/{userId}.html" var="userUrl">
@@ -42,15 +38,11 @@
 							<a href="${fn:escapeXml(userUrl)}"><c:out
 									value="${userTeam.user.firstName} ${userTeam.user.lastName}" /></a>
 						</datatables:column>
-						
+
 						<datatables:column title="Role">
 							<c:out value="${userTeam.user.role.role}" />
 						</datatables:column>
-						
-						<datatables:column title="Address" cssStyle="width: 200px;">
-							<c:out value="${userTeam.user.address }" />
-						</datatables:column>
-						
+
 						<datatables:column title="Team" display="html">
 							<spring:url value="/teams/{teamId}.html" var="teamUrl">
 								<spring:param name="teamId" value="${userTeam.team.id}" />
@@ -59,22 +51,18 @@
 									value="${userTeam.team.name}" /></a>
 						</datatables:column>
 
-						<c:choose>
-							<c:when test="${not empty userTeam.responsibility}">
-								<datatables:column title="Responsibility" property="responsibility" />
-							</c:when>
-							<c:otherwise>
-								<datatables:column title="Responsibility" display="html">
-									<spring:url value="/users/{userId}/teams/{teamId}/responsibility/add.html"
-										var="addResponsibilityUrl">
-										<spring:param name="userId" value="${userTeam.user.id}" />
-										<spring:param name="teamId" value="${userTeam.team.id}" />
-									</spring:url>
-									<a href="${fn:escapeXml(addResponsibilityUrl)}"
-										class="btn btn-mini btn-info">Add Responsibility</a>
-								</datatables:column>
-							</c:otherwise>
-						</c:choose>
+						<datatables:column title="Responsibility" display="html">
+							<c:out value="${userTeam.responsibility}" />  
+							<spring:url
+								value="/users/{userId}/teams/{teamId}/responsibility/add.html"
+								var="addResponsibilityUrl">
+								<spring:param name="userId" value="${userTeam.user.id}" />
+								<spring:param name="teamId" value="${userTeam.team.id}" />
+							</spring:url>
+							<a href="${fn:escapeXml(addResponsibilityUrl)}"
+								class="btn btn-mini btn-info">Edit</a>
+						</datatables:column>
+
 
 						<c:choose>
 							<c:when test="${userTeam.verified}">
@@ -100,7 +88,7 @@
 								<spring:param name="teamId" value="${userTeam.team.id}" />
 							</spring:url>
 							<a href='${fn:escapeXml(userRemoveUrl)}'
-								class="btn btn-mini btn-danger">Remove User</a>
+								class="btn btn-danger btn-mini">Remove User</a>
 						</datatables:column>
 
 					</datatables:table>

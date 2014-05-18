@@ -10,27 +10,13 @@ public class LinkNavigation {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView homePage() {
-		return new ModelAndView("welcome");
+		return new ModelAndView("redirect:/emergencys");
 	}
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView indexPage() {
-		return new ModelAndView("welcome");
+		return new ModelAndView("redirect:/emergencys");
 	}
 
-	@RequestMapping(value = "/sec/moderation", method = RequestMethod.GET)
-	public ModelAndView moderatorPage() {
-		return new ModelAndView("moderation");
-	}
-
-	@RequestMapping(value = "/admin/first", method = RequestMethod.GET)
-	public ModelAndView firstAdminPage() {
-		return new ModelAndView("admin-first");
-	}
-
-	@RequestMapping(value = "/admin/second", method = RequestMethod.GET)
-	public ModelAndView secondAdminPage() {
-		return new ModelAndView("admin-second");
-	}
 
 }

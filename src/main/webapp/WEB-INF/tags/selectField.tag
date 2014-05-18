@@ -9,6 +9,8 @@
               description="Names in the list" %>
 <%@ attribute name="size" required="true" rtexprvalue="true"
               description="Size of Select" %>
+              <%@ attribute name="multiple" required="true" rtexprvalue="true"
+              description="Exept multiple selects" %>
 
 <spring:bind path="${name}">
     <c:set var="cssGroup" value="control-group ${status.error ? 'error' : '' }"/>
@@ -16,7 +18,7 @@
         <label class="control-label">${label}</label>
 
         <div class="controls">
-            <form:select path="${name}" items="${names}" size="${size}"/>
+            <form:select path="${name}" items="${names}" size="${size}" multiple="${multiple}"/>
             <span class="help-inline">${status.errorMessage}</span>
         </div>
     </div>

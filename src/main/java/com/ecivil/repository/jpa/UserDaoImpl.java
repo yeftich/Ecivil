@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
-import com.ecivil.enums.Verifications;
+import com.ecivil.model.enums.EVerification;
 import com.ecivil.model.user.User;
 import com.ecivil.repository.UserDao;
 
@@ -70,11 +70,38 @@ public class UserDaoImpl implements UserDao {
 //				"\' WHERE USERID=" + userId + " AND TEAMID=" + teamId;
 		
 		Query query = this.em.createNamedQuery("updateStatusNativeSQL")
-			.setParameter("status", Verifications.Verified.inGreek())
+			.setParameter("status", EVerification.Verified.inGreek())
 			.setParameter("userId", userId)
 			.setParameter("teamId", teamId);
 
 		query.executeUpdate();
+	}
+
+	@Override
+	public void addUserResponsibility(int userId, int teamId, String responsStr)
+			throws DataAccessException {
+		logger.debug("ADDING RESPONSIBILITY " + responsStr + " to USER with userId " + userId 
+				+ " and team with teamId " + teamId);
+		
+		Query query = this.em.createNamedQuery("updateResponsibilityNativeSQL")
+				.setParameter("responsStr", responsStr)
+				.setParameter("userId", userId)
+				.setParameter("teamId", teamId);
+
+			query.executeUpdate();
+	}
+
+	@Override
+	public void removeUserFromTeam(int userId, int teamId)
+			throws DataAccessException {
+		logger.debug("REMOVING USER with userId " + userId 
+				+ " from team with teamId " + teamId);
+		
+		Query query = this.em.createNamedQuery("removeUserFromTeamNativeSQL")
+				.setParameter("userId", userId)
+				.setParameter("teamId", teamId);
+
+			query.executeUpdate();
 	}
 
 }

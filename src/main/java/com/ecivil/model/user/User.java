@@ -1,10 +1,7 @@
 package com.ecivil.model.user;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,13 +10,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 
 import org.hibernate.annotations.Cascade;
@@ -27,8 +23,10 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.ecivil.enums.Verifications;
+import com.ecivil.model.Location;
 import com.ecivil.model.Role;
+import com.ecivil.model.enums.EVerification;
+import com.ecivil.model.event.Event;
 import com.ecivil.model.team.Team;
 
 /**
@@ -96,6 +94,13 @@ public class User implements Serializable {
 	@JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "userid", referencedColumnName = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "roleid", referencedColumnName = "role_id") })
 	private Role role;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "owner")
+    private Set<Event> events;
+	
+    @ManyToOne
+    @JoinColumn(name = "CURRENT_LOCATION")
+    private Location current_location;
+	
 //	// temporal list of teams that user choose to sign up
 //	@Transient
 //	private List<Team> teams = new ArrayList<Team>();
@@ -200,6 +205,14 @@ public class User implements Serializable {
 		this.telephone = telephone;
 	}
 
+	public Location getCurrent_location() {
+		return current_location;
+	}
+
+	public void setCurrent_location(Location current_location) {
+		this.current_location = current_location;
+	}
+
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -231,7 +244,7 @@ public class User implements Serializable {
 	public void setUserTeams(Set<Team> teams) {
 		for(Team team : teams) {
 			if(!containsTeam(team)) {
-				UserTeam userTeam = new UserTeam(new Date(), Verifications.Unverified.inGreek());
+				UserTeam userTeam = new UserTeam(EVerification.Unverified.inGreek());
 				userTeam.setUser(this);
 				userTeam.setTeam(team);
 				this.userTeams.add(userTeam);
@@ -248,12 +261,12 @@ public class User implements Serializable {
 		return false;
 	}
 
-//	public List<Team> getTeams() {
-//		return teams;
-//	}
-//
-//	public void setTeams(List<Team> teams) {
-//		this.teams = teams;
-//	}
+	public Set<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(Set<Event> events) {
+		this.events = events;
+	}
 	
 }

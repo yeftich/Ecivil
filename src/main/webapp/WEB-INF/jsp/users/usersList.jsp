@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//GR"
-    "http://www.w3.org/TR/html4/loose.dtd">
-
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -11,8 +8,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="datatables"
 	uri="http://github.com/dandelion/datatables"%>
-
-<html lang="en">
 
 <jsp:include page="../fragments/headTag.jsp" />
 
@@ -24,8 +19,8 @@
 			<h2>Users</h2>
 
 			<c:choose>
-				<c:when test="${fn:length(selections) > 0}">
-					<datatables:table id="users" data="${selections}" cdn="true"
+				<c:when test="${fn:length(itemList) > 0}">
+					<datatables:table id="users" data="${itemList}" cdn="true"
 						row="user" theme="bootstrap2" cssClass="table table-striped"
 						paginate="false" info="false">
 						<datatables:column title="Login" property="login" />
@@ -50,7 +45,7 @@
 								<spring:param name="userId" value="${user.id}" />
 							</spring:url>
 							<a href='${fn:escapeXml(userDeleteUrl)}'
-								class="btn btn-danger btn-xs">Delete User</a>
+								class="btn btn-danger btn-mini">Delete User</a>
 						</datatables:column>
 
 					</datatables:table>

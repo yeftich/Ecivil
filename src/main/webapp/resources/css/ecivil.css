@@ -349,7 +349,7 @@ selectedCategory {
 /* new version css */
 .container {
 	padding:0px;
-	background: #D8EBF9;
+	/* background: #D8EBF9; */
 	margin: 0px;
 	width: 960px;
 }

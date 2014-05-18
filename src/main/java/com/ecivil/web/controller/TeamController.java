@@ -107,7 +107,7 @@ public class TeamController {
 				return "teams/findTeams";
 			}
 		}
-		model.put("selections", results);
+		model.put("itemList", results);
 		return "teams/teamsList";
 	}
 
@@ -138,7 +138,7 @@ public class TeamController {
     public ModelAndView deleteTeam(@PathVariable Integer teamId) {
         ModelAndView modelAndView = new ModelAndView("redirect:/teams");
         teamService.deleteTeam(teamId);
-        modelAndView.addObject("selections", (List<Team>) this.teamService.getAllTeams());
+        modelAndView.addObject("itemList", (List<Team>) this.teamService.getAllTeams());
         String message = "Team was successfully deleted.";
         modelAndView.addObject("message", message);
         return modelAndView;
