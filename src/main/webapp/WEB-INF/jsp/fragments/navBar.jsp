@@ -9,7 +9,7 @@
 	<div class="navbar-inner">
 		<ul class="nav">
 			<li><a
-				href="<spring:url value="/emergencys.html" htmlEscape="true" />"><i
+				href="<spring:url value="/index.html" htmlEscape="true" />"><i
 					class="icon-home"></i> <fmt:message key="navbar.menu.home" /></a></li>
 			<security:authorize access="isAuthenticated()">
 				<li><a

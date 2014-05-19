@@ -18,4 +18,6 @@ public interface EmergencyDao {
 
 	public Emergency findEmergencyById(int emergencyId) throws DataAccessException;
 
+	public void updateEmergency(Emergency emergency) throws DataAccessException;
+
 }

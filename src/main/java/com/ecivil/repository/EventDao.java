@@ -15,6 +15,9 @@ public interface EventDao {
 	
 	void saveEvent(Event event) throws DataAccessException;
 
-	public void closeEvent(int eventId) throws DataAccessException;;
+	public void closeEvent(int eventId) throws DataAccessException;
+
+	public void verifyEvent(int eventId)throws DataAccessException;
+
 
 }

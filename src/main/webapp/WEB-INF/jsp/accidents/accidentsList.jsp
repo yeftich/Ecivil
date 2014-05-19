@@ -95,7 +95,7 @@
 
 						<datatables:column title="Created date">
 							<joda:format value="${accident.createdDateTime}"
-								pattern="MM/dd/yyyy HH:mm:ss" />
+								pattern="dd/MM/yyyy HH:mm:ss" />
 						</datatables:column>
 
 						<datatables:column title="Place">

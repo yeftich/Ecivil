@@ -16,35 +16,41 @@
 		<div class="container">
 			<jsp:include page="../fragments/navBar.jsp" />
 
-			<h2>Accident Information</h2>
+			<h2>Action Information</h2>
 
 			<table class="table table-striped" style="width: 600px;">
 				<tr>
 					<th>Created date</th>
-					<td><b><joda:format value="${accident.createdDateTime}" pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
+					<td><b><joda:format value="${action.createdDateTime}"
+								pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
 				</tr>
 				<tr>
 					<th>Place</th>
-					<td><b><c:out value="${accident.place}" /></b></td>
+					<td><b><c:out value="${action.place}" /></b></td>
+				</tr>
+				<tr>
+					<th>Tool</th>
+					<td><c:out value="${action.tool}" /></td>
 				</tr>
 				<tr>
 					<th>Description</th>
-					<td><c:out value="${accident.textDescription}" /></td>
+					<td><c:out value="${action.textDescription}" /></td>
 				</tr>
 				<tr>
 					<th>Created by user</th>
-					<td><c:out value="${accident.owner.login}" /></td>
+					<td><c:out value="${action.owner.login}" /></td>
 				</tr>
 				<tr>
-					<th>Type</th>
-					<td><c:out value="${accident.type}" /></td>
+					<th>Related to emergency</th>
+					<td><c:out value="${action.emergency.textDescription}" /></td>
 				</tr>
 
+
 				<tr>
-					<td><spring:url value="{accidentId}/edit.html" var="editUrl">
-							<spring:param name="accidentId" value="${accident.id}" />
+					<td><spring:url value="{actionId}/edit.html" var="editUrl">
+							<spring:param name="actionId" value="${action.id}" />
 						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
-							Accident</a></td>
+							Action</a></td>
 				</tr>
 			</table>
 

@@ -32,6 +32,7 @@ import com.ecivil.model.user.User;
  */
 
 @NamedNativeQueries({
+	@NamedNativeQuery(name = "updateCertificationNativeSQL", query = "update events set certification = :certification where EVENT_ID = :eventId"),
 	@NamedNativeQuery(name = "updateFreshnessNativeSQL", query = "update events set freshness = :freshness where EVENT_ID = :eventId") })
 @Entity
 @Table(name = "EVENTS")
@@ -46,7 +47,7 @@ public abstract class Event implements Serializable {
     private Integer id;
     
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss.SSS")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss.SSS")
 	@Column(name = "CREATED_DATE_TIME", nullable = false)
     private DateTime createdDateTime;
 	

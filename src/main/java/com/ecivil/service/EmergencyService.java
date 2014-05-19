@@ -17,5 +17,5 @@ public interface EmergencyService {
 
 	Emergency findEmergencyById(int emergencyId) throws DataAccessException;
 
-//	void updateEmergency(Emergency emergency) throws DataAccessException;
+	void updateEmergency(Emergency emergency) throws DataAccessException;
 }

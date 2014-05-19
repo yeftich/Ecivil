@@ -50,7 +50,7 @@
 										<dt>Created Date</dt>
 										<dd>
 											<joda:format value="${emergency.createdDateTime}"
-												pattern="MM/dd/yyyy HH:mm:ss" />
+												pattern="dd/MM/yyyy HH:mm:ss" />
 										</dd>
 										<dt>Type</dt>
 										<dd>
@@ -81,13 +81,12 @@
 												</tr>
 											</thead>
 
-											<c:forEach var="action" items="${emergency.actions}"
-												begin="1" end="4">
+											<c:forEach var="action" items="${emergency.actions}">
 												<tr>
 													<td><c:out value="${action.textDescription}" /></td>
 													<td><joda:format value="${action.createdDateTime}"
-															pattern="HH:mm:ss" /></td>
-													<td><c:out value="${action.owner}" /></td>
+															pattern="dd/MM/yyyy HH:mm:ss" /></td>
+													<td><c:out value="${action.owner.login}" /></td>
 												</tr>
 											</c:forEach>
 
@@ -99,20 +98,32 @@
 										value="/emergencys/{emergencyId}/action/new"
 										var="newActionUrl">
 										<spring:param name="emergencyId" value="${emergency.id}" />
-									</spring:url> <a href="${fn:escapeXml(newActionUrl)}">Participate</a> <spring:url
-										value="/emergencys/{emergencyId}/close"
+									</spring:url> <spring:url value="/emergencys/{emergencyId}/close"
 										var="closeEmergencyUrl">
 										<spring:param name="emergencyId" value="${emergency.id}" />
-									</spring:url> <c:choose>
+									</spring:url> <spring:url value="/emergencys/{emergencyId}/verify"
+										var="verifyEmergencyUrl">
+										<spring:param name="emergencyId" value="${emergency.id}" />
+									</spring:url><spring:url value="/emergencys/{emergencyId}/edit"
+										var="editEmergencyUrl">
+										<spring:param name="emergencyId" value="${emergency.id}" />
+									</spring:url>
+									 <c:choose>
 										<c:when test="${emergency.owner.login == userLogin}">
+										<a href="${fn:escapeXml(editEmergencyUrl)}">Edit</a>
 										 | 
 										<a href="${fn:escapeXml(closeEmergencyUrl)}">Close</a>
 										</c:when>
 										<c:otherwise>
+											<security:authorize access="isAuthenticated()">
+												<a href="${fn:escapeXml(newActionUrl)}">Participate</a>
+											</security:authorize>
 											<security:authorize
 												access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
-										| 
-										<a href="${fn:escapeXml(closeEmergencyUrl)}">Close</a>
+										  |  
+									<a href="${fn:escapeXml(verifyEmergencyUrl)}">Verify</a>
+										  | 
+									<a href="${fn:escapeXml(closeEmergencyUrl)}">Close</a>
 											</security:authorize>
 										</c:otherwise>
 									</c:choose></td>

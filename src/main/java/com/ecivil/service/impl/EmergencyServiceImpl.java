@@ -42,6 +42,13 @@ public class EmergencyServiceImpl implements EmergencyService{
 	public Emergency findEmergencyById(int emergencyId) throws DataAccessException {
 		return this.emergencyDao.findEmergencyById(emergencyId);
 	}
+	
+	@Override
+	@Transactional
+	public void updateEmergency(Emergency emergency) throws DataAccessException {
+		emergencyDao.updateEmergency(emergency);
+	}
+	
 //	@Override
 //	@Transactional
 //	public Emergency findEmergencyById(int emergencyId) throws DataAccessException {
@@ -55,10 +62,6 @@ public class EmergencyServiceImpl implements EmergencyService{
 //		}
 //	}
 
-//	@Override
-//	@Transactional
-//	public void updateEmergency(Emergency emergency) throws DataAccessException {
-//		emergencyDao.updateEmergency(emergency);
-//	}
+
 
 }

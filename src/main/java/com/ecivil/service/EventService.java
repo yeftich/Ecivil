@@ -17,5 +17,7 @@ import com.ecivil.model.event.Event;
 public interface EventService {
 
 	void closeEvent(int eventId);
+
+	void verifyEvent(int eventId);
 		
 }

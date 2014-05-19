@@ -115,12 +115,12 @@ public class TeamController {
 	public String initUpdateTeamForm(@PathVariable("teamId") int teamId,
 			Model model) {
 		Team team = this.teamService.findTeamById(teamId);
-		model.addAttribute(team);
+		model.addAttribute("team", team);
 		return "teams/createOrUpdateTeamForm";
 	}
 
 	@RequestMapping(value = "/teams/{teamId}/edit", method = RequestMethod.PUT)
-	public String processUpdateTeamForm(@PathVariable("teamId") int teamId, Team team, BindingResult result,
+	public String processUpdateTeamForm(@PathVariable("teamId") int teamId, @ModelAttribute("team") Team team, BindingResult result,
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			return "teams/createOrUpdateTeamForm";

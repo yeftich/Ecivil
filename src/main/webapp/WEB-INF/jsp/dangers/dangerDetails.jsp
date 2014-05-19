@@ -21,7 +21,7 @@
 			<table class="table table-striped" style="width: 600px;">
 				<tr>
 					<th>Created date</th>
-					<td><b><joda:format value="${danger.createdDateTime}" pattern="MM/dd/yyyy HH:mm:ss" /></b></td>
+					<td><b><joda:format value="${danger.createdDateTime}" pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
 				</tr>
 				<tr>
 					<th>Place</th>

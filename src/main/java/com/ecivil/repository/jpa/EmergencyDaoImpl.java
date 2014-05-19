@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.ecivil.model.event.Emergency;
+import com.ecivil.model.user.User;
 import com.ecivil.repository.EmergencyDao;
 
 /**
@@ -37,6 +38,11 @@ public class EmergencyDaoImpl implements EmergencyDao {
 				.createQuery("SELECT DISTINCT emergency FROM Emergency emergency WHERE emergency.id = :emergencyId");
 		query.setParameter("emergencyId", emergencyId);
 		return (Emergency) query.getSingleResult();
+	}
+
+	@Override
+	public void updateEmergency(Emergency emergency) throws DataAccessException {
+			this.em.merge(emergency);
 	}
 
 		

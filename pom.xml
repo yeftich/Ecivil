@@ -62,7 +62,7 @@
 		<!-- Web dependencies -->
 		<webjars-bootstrap.version>2.3.0</webjars-bootstrap.version>
 		<webjars-jquery-ui.version>1.10.3</webjars-jquery-ui.version>
-		<webjars-jquery.version>2.0.3-1</webjars-jquery.version>
+		<webjars-jquery.version>1.9.1</webjars-jquery.version>
 		<dandelion.datatables.version>0.9.3</dandelion.datatables.version>
 
 		<mysql.version>5.1.22</mysql.version>
@@ -452,6 +452,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery-validation</artifactId>
+			<version>1.12.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 
 		<!-- Test Artifacts -->
 		<dependency>

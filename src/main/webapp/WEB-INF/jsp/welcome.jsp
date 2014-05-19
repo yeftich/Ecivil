@@ -50,7 +50,7 @@
 										<dt>Created Date</dt>
 										<dd>
 											<joda:format value="${emergency.createdDateTime}"
-												pattern="MM/dd/yyyy HH:mm:ss" />
+												pattern="dd/MM/yyyy HH:mm:ss" />
 										</dd>
 										<dt>Type</dt>
 										<dd>

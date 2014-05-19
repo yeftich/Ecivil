@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.ecivil.model.enums.EEventStatus;
+import com.ecivil.model.enums.EVerification;
 import com.ecivil.model.event.Event;
 import com.ecivil.repository.EventDao;
 
@@ -43,6 +44,15 @@ public class EventDaoImpl implements EventDao{
 	public void closeEvent(int eventId) throws DataAccessException {
 		Query query = this.em.createNamedQuery("updateFreshnessNativeSQL")
 				.setParameter("freshness", EEventStatus.Closed.inGreek())
+				.setParameter("eventId", eventId);
+
+			query.executeUpdate();		
+	}
+	
+	@Override
+	public void verifyEvent(int eventId) throws DataAccessException {
+		Query query = this.em.createNamedQuery("updateCertificationNativeSQL")
+				.setParameter("certification", EVerification.Verified.inGreek())
 				.setParameter("eventId", eventId);
 
 			query.executeUpdate();		

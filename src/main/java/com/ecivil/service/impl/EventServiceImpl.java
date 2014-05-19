@@ -32,5 +32,10 @@ public class EventServiceImpl implements EventService{
 		this.eventDao.closeEvent(eventId);
 	}
 
+	@Override
+	@Transactional
+	public void verifyEvent(int eventId) {
+		this.eventDao.verifyEvent(eventId);
+	}
 
 }

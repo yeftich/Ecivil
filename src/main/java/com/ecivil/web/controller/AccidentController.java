@@ -92,12 +92,12 @@ public class AccidentController {
 	public String initUpdateAccidentForm(@PathVariable("accidentId") int accidentId,
 			Model model) {
 		Accident accident = this.accidentService.findAccidentById(accidentId);
-		model.addAttribute(accident);
+		model.addAttribute("accident", accident);
 		return "accidents/createOrUpdateAccidentForm";
 	}
 
 	@RequestMapping(value = "/accidents/{accidentId}/edit", method = RequestMethod.PUT)
-	public String processUpdateAccidentForm(@PathVariable("accidentId") int accidentId, Accident accident, BindingResult result,
+	public String processUpdateAccidentForm(@PathVariable("accidentId") int accidentId, @ModelAttribute("accident") Accident accident, BindingResult result,
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			return "accidents/createOrUpdateAccidentForm";

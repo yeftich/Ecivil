@@ -81,7 +81,7 @@ public class UserTeam implements Serializable {
 	}
 
 	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss.SSS")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss.SSS")
 	@Column(name = "CREATED_DATE", nullable = false)
 	public DateTime getCreatedDate() {
 		return this.createdDate;

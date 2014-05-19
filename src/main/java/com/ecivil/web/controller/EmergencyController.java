@@ -15,12 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ecivil.model.enums.EEventStatus;
@@ -31,7 +35,6 @@ import com.ecivil.model.event.Emergency;
 import com.ecivil.model.event.Event;
 import com.ecivil.service.AccidentService;
 import com.ecivil.service.DangerService;
-import com.ecivil.service.EmergencyService;
 import com.ecivil.service.EmergencyService;
 import com.ecivil.service.EventService;
 import com.ecivil.service.UserService;
@@ -65,6 +68,16 @@ public class EmergencyController {
 		dataBinder.setDisallowedFields("id");
 	}
 	
+	@RequestMapping(value = "/emergencys/{emergencyId}/verify", method = RequestMethod.GET)
+	public String verifyEmergency(@PathVariable("emergencyId") int emergencyId) {
+		
+		this.eventService.verifyEvent(emergencyId);
+		
+		logger.debug("EMERGENCY CLOSED id = " + emergencyId );
+		
+		return "redirect:/index";
+	}
+	
 	@RequestMapping(value = "/emergencys/{emergencyId}/close", method = RequestMethod.GET)
 	public ModelAndView closeEmergency(@PathVariable("emergencyId") int emergencyId) {
 		
@@ -77,11 +90,11 @@ public class EmergencyController {
 		this.eventService.closeEvent(emergency.getId());
 		
 		logger.debug("EMERGENCY CLOSED --> " + emergency.getFreshness() );
-		return new ModelAndView("redirect:/emergencys");
+		return new ModelAndView("redirect:/index");
 		
 	}
 	
-	@RequestMapping(value = "/emergencys", method = RequestMethod.GET)
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView listAllEmergencys(Principal principal) {
 		ModelAndView modelAndView = new ModelAndView("emergencys/emergencysList");
 		if(principal != null && principal.getName() != null) {
@@ -119,5 +132,29 @@ public class EmergencyController {
 		
 		modelAndView.addObject("itemList", itemList);
 		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/emergencys/{emergencyId}/edit", method = RequestMethod.GET)
+	public String initUpdateEmergencyForm(@PathVariable("emergencyId") int emergencyId,
+			Model model) {
+		Emergency emergency = this.emergencyService.findEmergencyById(emergencyId);
+		logger.debug("EMERGENCYIS " + emergency.getTextDescription());
+		model.addAttribute("emergency", emergency);
+		return "emergencys/createOrUpdateEmergencyForm";
+	}
+
+	@RequestMapping(value = "/emergencys/{emergencyId}/edit", method = RequestMethod.PUT)
+	public String processUpdateEmergencyForm(@PathVariable("emergencyId") int emergencyId, @ModelAttribute("emergency") Emergency emergency, BindingResult result,
+			SessionStatus status) {
+		if (result.hasErrors()) {
+			return "emergencys/createOrUpdateEmergencyForm";
+		} else {
+			if(emergency.getId() == null) {
+				emergency.setId(emergencyId);
+			}
+			this.emergencyService.updateEmergency(emergency);
+			status.setComplete();
+			return "redirect:/index";
+		}
 	}
 }

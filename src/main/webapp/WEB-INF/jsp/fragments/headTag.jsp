@@ -19,8 +19,14 @@ ecivil :: a civil protection web application
 		<spring:url value="/resources/css/ecivil.css" var="ecivilCss" />
 		<link href="${ecivilCss}" rel="stylesheet" />
 		
-		<spring:url value="/webjars/jquery/2.0.3/jquery.js" var="jQuery" />
+		<spring:url value="/webjars/jquery/1.9.1/jquery.js" var="jQuery" />
 		<script src="${jQuery}"></script>
+		
+		<spring:url value="/webjars/jquery-validation/1.12.0/jquery.validate.js" var = "jQueryValidate" />
+		<script src="${jQueryValidate}"></script>
+		
+		<spring:url value="/resources/js/error_messages_el.js" var = "jQueryValidateErrorMessages" />
+		<script src="${jQueryValidateErrorMessages}"></script>
 		
 		<!-- jquery-ui.js file is really big so we only load what we need instead of loading everything -->
 		<spring:url value="/webjars/jquery-ui/1.10.3/ui/jquery.ui.core.js"

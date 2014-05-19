@@ -95,12 +95,12 @@ public class DangerController {
 	public String initUpdateDangerForm(@PathVariable("dangerId") int dangerId,
 			Model model) {
 		Danger danger = this.dangerService.findDangerById(dangerId);
-		model.addAttribute(danger);
+		model.addAttribute("danger", danger);
 		return "dangers/createOrUpdateDangerForm";
 	}
 
 	@RequestMapping(value = "/dangers/{dangerId}/edit", method = RequestMethod.PUT)
-	public String processUpdateDangerForm(@PathVariable("dangerId") int dangerId, Danger danger, BindingResult result,
+	public String processUpdateDangerForm(@PathVariable("dangerId") int dangerId, @ModelAttribute("danger") Danger danger, BindingResult result,
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			return "dangers/createOrUpdateDangerForm";
