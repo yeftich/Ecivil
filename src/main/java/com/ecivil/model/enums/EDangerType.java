@@ -30,7 +30,13 @@ public enum EDangerType {
 			typesMap.put(aEnum.inGreek(), aEnum.inGreek());
 		}
 
+		typesMap.remove(defaultInGreek());
+		
 		return typesMap;
+	}
+	
+	public static String defaultInGreek() {
+		return "Κίνδυνος";
 	}
 	
 	public static Map<String, String> getSelections() {

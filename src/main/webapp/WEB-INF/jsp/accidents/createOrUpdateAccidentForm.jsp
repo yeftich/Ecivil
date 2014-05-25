@@ -10,7 +10,7 @@
 <%@ taglib prefix="ecivil" tagdir="/WEB-INF/tags"%>
 
 <jsp:include page="../fragments/headTag.jsp" />
-
+</head>
 <body>
 	<div id="main">
 		<jsp:include page="../fragments/header.jsp" />
@@ -48,9 +48,8 @@
 
 					<div class="controls">
 						<form:select path="type">
-							<form:option value="-" label="-- Select one -- ">
-								<form:options items="${accidentTypes}"></form:options>
-							</form:option>
+							<form:option value="${defaultType}" label="${defaultType}" />
+							<form:options items="${accidentTypes}" />
 						</form:select>
 						<span class="help-inline"><form:errors path="type" /></span>
 					</div>

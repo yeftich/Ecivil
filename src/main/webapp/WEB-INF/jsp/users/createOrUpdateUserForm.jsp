@@ -10,6 +10,62 @@
 <%@ taglib prefix="ecivil" tagdir="/WEB-INF/tags"%>
 
 <jsp:include page="../fragments/headTag.jsp" />
+</head>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+
+				toggleFields();
+
+				$("#volunteer").change(function() {
+					toggleFields();
+				});
+
+				$('#add-user-form').validate(
+						{
+							rules : {
+								login : {
+									minlength : 4,
+									required : true
+								},
+								password : {
+									minlength : 4,
+									required : true
+								},
+								googleAccount : {
+									email : true,
+									required : true
+								},
+								firstName : "required",
+								lastName : "required",
+								telephone : {
+									number : true,
+									minlength : 9,
+									required : true
+								},
+								policy : "required"
+							},
+							highlight : function(element) {
+								$(element).closest('.control-group')
+										.removeClass('success').addClass(
+												'error');
+							},
+							success : function(element) {
+								element.text('OK!').addClass('valid').closest(
+										'.control-group').removeClass('error')
+										.addClass('success');
+							}
+						});
+
+			});
+
+	function toggleFields() {
+		if ($("#volunteer").is(':checked'))
+			$("#teamsDiv").show();
+		else
+			$("#teamsDiv").hide();
+	}
+</script>
 
 <body>
 	<div id="main">
@@ -35,67 +91,120 @@
 			<form:form modelAttribute="user" method="${method}"
 				class="form-horizontal" id="add-user-form">
 				<%-- <form:errors path="*" cssClass="errorblock" element="div" /> --%>
-				<table>
-					<tr>
-						<td>Login:</td>
-						<td><form:input path="login" /></td>
-						<td><form:errors path="login" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>Password:</td>
-						<td><form:password path="password" /></td>
-						<td><form:errors path="password" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>Google account:</td>
-						<td><form:input path="googleAccount" /></td>
-						<td><form:errors path="googleAccount" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>First Name:</td>
-						<td><form:input path="firstName" /></td>
-						<td><form:errors path="firstName" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>Last Name:</td>
-						<td><form:input path="lastName" /></td>
-						<td><form:errors path="lastName" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>Address:</td>
-						<td><form:input path="address" /></td>
-						<td><form:errors path="address" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>City:</td>
-						<td><form:input path="city" /></td>
-						<td><form:errors path="city" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>Telephone:</td>
-						<td><form:input path="telephone" /></td>
-						<td><form:errors path="telephone" cssClass="error" /></td>
-					</tr>
-					<tr>
-						<td>Teams :</td>
-						<td><form:select path="userTeams" items="${teamList}"
-								multiple="true" /></td>
-						<td><form:errors path="userTeams" cssClass="error" /></td>
-					</tr>
-				</table>
 
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.userLogin" /> </label>
 
-				<div class="form-actions">
-					<c:choose>
-						<c:when test="${user['new']}">
-							<button type="submit">Add user</button>
-						</c:when>
-						<c:otherwise>
-							<button type="submit">Update user</button>
-						</c:otherwise>
-					</c:choose>
+					<div class="controls">
+						<form:input path="login" size="30" maxlength="40" />
+						<span class="help-inline"><form:errors path="login" /></span>
+					</div>
 				</div>
 
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.password" /></label>
+					<div class="controls">
+						<form:password path="password" size="30" maxlength="32" />
+						<span class="help-inline"><form:errors path="password" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.googleAccount" /></label>
+					<div class="controls">
+						<form:input path="googleAccount" size="30" />
+						<span class="help-inline"><form:errors path="googleAccount" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.firstName" /></label>
+					<div class="controls">
+						<form:input path="firstName" size="30" />
+						<span class="help-inline"><form:errors path="firstName" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.lastName" /></label>
+					<div class="controls">
+						<form:input path="lastName" size="30" />
+						<span class="help-inline"><form:errors path="lastName" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.address" /></label>
+					<div class="controls">
+						<form:input path="address" size="30" />
+						<span class="help-inline"><form:errors path="address" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.city" /></label>
+					<div class="controls">
+						<form:input path="city" size="30" />
+						<span class="help-inline"><form:errors path="city" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.telephone" /></label>
+					<div class="controls">
+						<form:input path="telephone" size="30" />
+						<span class="help-inline"><form:errors path="telephone" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="controls">
+						<label class="checkbox"><fmt:message
+								key="createOrUpdateUserForm.form.label.volunteer" /> <input
+							id="volunteer" type="checkbox" name="volunteer" /> </label>
+					</div>
+				</div>
+
+				<div id="teamsDiv" class="control-group">
+					<label class="control-label"><fmt:message
+							key="createOrUpdateUserForm.form.label.userTeams" /></label>
+					<div class="controls">
+						<form:select path="userTeams" items="${teamList}" multiple="true" />
+						<span class="help-inline"><form:errors path="userTeams" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<div class="controls">
+						<label class="checkbox"><fmt:message
+								key="createOrUpdateUserForm.form.label.policy" /> <input
+							id="policy" type="checkbox" name="policy" /> </label>
+					</div>
+				</div>
+
+				<c:choose>
+					<c:when test="${user['new']}">
+						<button type="submit" class="btn btn-success">
+							<fmt:message
+								key="createOrUpdateUserForm.form.button.submit.add.user" />
+						</button>
+					</c:when>
+					<c:otherwise>
+						<button type="submit" class="btn btn-primary">
+							<fmt:message
+								key="createOrUpdateUserForm.form.button.submit.update.user" />
+						</button>
+					</c:otherwise>
+				</c:choose>
 			</form:form>
 		</div>
 		<jsp:include page="../fragments/footer.jsp" />

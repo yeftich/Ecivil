@@ -72,13 +72,30 @@ public abstract class Event implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "LOCATION_ID")
-    private Location lacation;
+    private Location location;
     
     public Event() {
     	this.createdDateTime = new DateTime();
     	this.freshness = EEventStatus.Active.inGreek();
     	this.certification = EVerification.Unverified.inGreek();
     }
+    
+    public boolean hasValidLocation() {
+		if(this.location == null ) {
+			return false;
+		}
+		if(this.location.getLatitude() == null) {
+			return false;
+		}
+		if(this.location.getLongitude() == null) {
+			return false;
+		}
+		if(this.location.getLatitude().doubleValue() == 0d
+				&& this.location.getLongitude().doubleValue() == 0d) {
+			return false;
+		}
+		return true;
+	}
 
 //	public Event(Integer id, DateTime createdDateTime, String place,
 //			String textDescription, User owner, String freshness,
@@ -159,5 +176,15 @@ public abstract class Event implements Serializable {
 	public void setCertification(String certification) {
 		this.certification = certification;
 	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	
 
 }

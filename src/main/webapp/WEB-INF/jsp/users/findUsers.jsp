@@ -8,7 +8,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <jsp:include page="../fragments/headTag.jsp" />
-
+</head>
 <body>
 	<div id="main">
 		<jsp:include page="../fragments/header.jsp" />

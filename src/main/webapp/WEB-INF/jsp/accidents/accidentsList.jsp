@@ -15,8 +15,10 @@
 <jsp:include page="../fragments/headTag.jsp" />
 
 
+
+</head>
 <body>
-	<script>
+	<!-- <script>
 		window.onload = getLocation;
 		var x = document.getElementById("demo");
 		function getLocation() {
@@ -53,23 +55,22 @@
 				break;
 			}
 		}
-	</script>
+	</script> -->
 	<div id="main">
 		<jsp:include page="../fragments/header.jsp" />
 		<div class="container">
 			<jsp:include page="../fragments/navBar.jsp" />
 			<h2>Accidents</h2>
 
-			<a href='<spring:url value="/accidents/new" htmlEscape="true"/>'
+			<a id="addAccidentButton"
+				href='<spring:url value="/accidents/new" htmlEscape="true"/>'
 				class="btn btn-success">Add Accident</a> <br />
 
-			<p id="demo"></p>
-			<div id="mapholder"></div>
 			<c:choose>
 				<c:when test="${fn:length(itemList) > 0}">
 					<datatables:table id="accidents" data="${itemList}" cdn="true"
 						row="accident" theme="bootstrap2" cssClass="table table-striped"
-						paginate="false" info="false">
+						cssCellClass="accident-item" paginate="false" info="false">
 
 						<datatables:column title="Description" cssStyle="width: 150px;"
 							display="html">
@@ -113,6 +114,13 @@
 									class="btn btn-danger btn-mini">Delete Accident</a>
 							</security:authorize>
 						</datatables:column>
+
+						<datatables:column display="html">
+							<a class="map-link"
+								id="eventId${accident.id}-lat${accident.location.latitude}-lon${accident.location.longitude}"
+								href='#' class="btn btn-danger btn-mini">Show on map</a>
+						</datatables:column>
+
 
 					</datatables:table>
 

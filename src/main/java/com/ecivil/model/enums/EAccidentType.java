@@ -25,11 +25,18 @@ public enum EAccidentType {
 	private static Map<String, String> makeSelectMap() {
 		Map<String, String> typesMap = new HashMap<String, String>();
 
+		
 		for (EAccidentType aEnum : EAccidentType.values()) {
 			typesMap.put(aEnum.inGreek(), aEnum.inGreek());
 		}
 
+		typesMap.remove(defaultInGreek());
+		
 		return typesMap;
+	}
+	
+	public static String defaultInGreek() {
+		return "Άτύχημα";
 	}
 	
 	public static Map<String, String> getSelections() {

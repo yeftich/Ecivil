@@ -1,5 +1,6 @@
 package com.ecivil.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ecivil.model.event.Accident;
+import com.ecivil.model.event.Danger;
 import com.ecivil.model.event.Emergency;
 import com.ecivil.repository.AccidentDao;
 import com.ecivil.repository.DangerDao;
@@ -32,9 +35,26 @@ public class EmergencyServiceImpl implements EmergencyService{
 
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public List<Emergency> getAllEmergencys() throws DataAccessException {
-		return (List<Emergency>) emergencyDao.getAllEmergencys();
+		List<Accident> accidents = this.accidentDao.getAllAccidents();
+		List<Danger> dangers = this.dangerDao.getAllDangers();
+		int size = 0;
+		if(accidents != null && dangers != null) {
+			size = accidents.size() + dangers.size();
+		}
+		List<Emergency> emergencies = new ArrayList<Emergency>(size);
+
+		if(accidents != null) {
+			emergencies.addAll(accidents);
+		}
+
+		if(dangers != null) {
+			emergencies.addAll(dangers);
+		}
+		
+		return emergencies;
+/*		return (List<Emergency>) emergencyDao.getAllEmergencys();*/
 	}
 
 	@Override
@@ -48,6 +68,8 @@ public class EmergencyServiceImpl implements EmergencyService{
 	public void updateEmergency(Emergency emergency) throws DataAccessException {
 		emergencyDao.updateEmergency(emergency);
 	}
+	
+	
 	
 //	@Override
 //	@Transactional

@@ -10,7 +10,7 @@
 <%@ taglib prefix="ecivil" tagdir="/WEB-INF/tags"%>
 
 <jsp:include page="../fragments/headTag.jsp" />
-
+</head>
 <body>
 	<div id="main">
 		<jsp:include page="../fragments/header.jsp" />

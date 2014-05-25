@@ -55,6 +55,12 @@ public class AccidentController {
 		return EAccidentType.getSelections();
 	}
 	
+	@ModelAttribute("defaultType")
+	public String populateDefaultType() {
+		return EAccidentType.defaultInGreek();
+	}
+	
+	
 	@RequestMapping(value = "/accidents/new", method = RequestMethod.GET)
 	public String initCreationAccidentForm(Map<String, Object> model) {
 		logger.debug("initCreationAccidentForm for new accident");
@@ -73,7 +79,10 @@ public class AccidentController {
 			return "accidents/createOrUpdateAccidentForm";
 		} else {
 			User owner = userService.getLoggedInUser();
-			logger.debug("LOGGED IN USER IS " + owner.getLastName());
+			logger.debug("LOGGED IN USER IS " + owner.getLastName() + " and his location is " + owner.getCurrent_location());
+			if(owner.hasValidLocation()) {
+				accident.setLocation(owner.getCurrent_location());
+			}
 			accident.setOwner(owner);
 			this.accidentService.saveAccident(accident);
 			status.setComplete();

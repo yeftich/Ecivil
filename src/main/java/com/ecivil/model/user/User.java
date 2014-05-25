@@ -16,12 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.ecivil.model.Location;
 import com.ecivil.model.Role;
@@ -46,31 +44,24 @@ public class User implements Serializable {
 	private Integer id;
 
 	@Column(name = "login", length = 45, unique = true)
-	@NotEmpty
 	private String login;
 
 	@Column(name = "password", length = 45)
-	@NotEmpty
 	private String password;
 
 	@Column(name = "google_account")
 	private String googleAccount;
 
 	@Column(name = "city")
-	@NotEmpty
 	private String city;
 
 	@Column(name = "first_name")
-	@NotEmpty
 	private String firstName;
 
 	@Column(name = "last_name")
-	@NotEmpty
 	private String lastName;
 
 	@Column(name = "telephone")
-	@NotEmpty
-	@Digits(fraction = 0, integer = 10)
 	private String telephone;
 
 	@Column(name = "enabled", columnDefinition = "TINYINT(1) DEFAULT 1")
@@ -89,7 +80,10 @@ public class User implements Serializable {
 	@Column(name = "address")
 	private String address;
 
-	@OneToOne()
+	@Column(name = "uuid")
+	private String uuid;
+	
+	@OneToOne
 	@Cascade({ CascadeType.SAVE_UPDATE })
 	@JoinTable(name = "users_roles", joinColumns = { @JoinColumn(name = "userid", referencedColumnName = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "roleid", referencedColumnName = "role_id") })
 	private Role role;
@@ -97,7 +91,8 @@ public class User implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "owner")
     private Set<Event> events;
 	
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    /*@Cascade({CascadeType.SAVE_UPDATE})*/
     @JoinColumn(name = "CURRENT_LOCATION")
     private Location current_location;
 	
@@ -107,7 +102,7 @@ public class User implements Serializable {
 	
 //	@ManyToMany(mappedBy = "users")
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.user", cascade=javax.persistence.CascadeType.ALL)
-	private Set<UserTeam> userTeams = new HashSet<UserTeam>(0);
+	private Set<UserTeam> userTeams = new HashSet<UserTeam>();
 
 	public boolean isNew() {
 		if (this.id == null) {
@@ -242,12 +237,14 @@ public class User implements Serializable {
 	}
 
 	public void setUserTeams(Set<Team> teams) {
-		for(Team team : teams) {
-			if(!containsTeam(team)) {
-				UserTeam userTeam = new UserTeam(EVerification.Unverified.inGreek());
-				userTeam.setUser(this);
-				userTeam.setTeam(team);
-				this.userTeams.add(userTeam);
+		if(teams != null) {
+			for(Team team : teams) {
+				if(!containsTeam(team)) {
+					UserTeam userTeam = new UserTeam(EVerification.Unverified.inGreek());
+					userTeam.setUser(this);
+					userTeam.setTeam(team);
+					this.userTeams.add(userTeam);
+				}
 			}
 		}
 	}
@@ -268,5 +265,32 @@ public class User implements Serializable {
 	public void setEvents(Set<Event> events) {
 		this.events = events;
 	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public boolean hasValidLocation() {
+		if(this.current_location == null ) {
+			return false;
+		}
+		if(this.current_location.getLatitude() == null) {
+			return false;
+		}
+		if(this.current_location.getLongitude() == null) {
+			return false;
+		}
+		if(this.current_location.getLatitude().doubleValue() == 0d
+				&& this.current_location.getLongitude().doubleValue() == 0d) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }

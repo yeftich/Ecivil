@@ -19,17 +19,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ecivil.model.Location;
 import com.ecivil.model.team.Team;
 import com.ecivil.model.user.User;
 import com.ecivil.model.user.UserTeam;
+import com.ecivil.service.RoleService;
 import com.ecivil.service.TeamService;
 import com.ecivil.service.UserService;
+import com.ecivil.util.ConstantUtil;
 
 @Controller
 @SessionAttributes({ "user", "aUserTeam" })
@@ -40,11 +44,14 @@ public class UserController {
 	private final UserService userService;
 
 	private final TeamService teamService;
+	
+	private final RoleService roleService;
 
 	@Autowired
-	public UserController(UserService userService, TeamService teamService) {
+	public UserController(UserService userService, TeamService teamService, RoleService roleService) {
 		this.userService = userService;
 		this.teamService = teamService;
+		this.roleService = roleService;
 	}
 
 	@InitBinder
@@ -67,72 +74,72 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/users/new", method = RequestMethod.POST)
-	public String processCreationForm(@ModelAttribute("user")User user,
-			BindingResult result, SessionStatus status) {
+	public String processCreationForm(@ModelAttribute("user") User user, Map<String, Object> model) {
 		logger.debug("proccessCreationForm for new user");
-
-		if (result.hasErrors()) {
+		
+		User dbUser = this.userService.getUser(user.getLogin());
+		
+		if (dbUser != null) {
+			user.setLogin(null);
+			model.put("user", user);
+			model.put("message", "User name already exists!");
 			return "users/createOrUpdateUserForm";
 		} else {
-			if (user.isNew()) {
-				this.userService.createUser(user);
-			} else {
-				this.userService.updateUser(user);
-			}
-
-			status.setComplete();
+			this.userService.createUser(user);
+			
 			return "redirect:/users/" + user.getId();
 		}
 	}
 
-//	@RequestMapping(value = "/users/find", method = RequestMethod.GET)
-//	public String initFindForm(Map<String, Object> model) {
-//		model.put("user", new User());
-//		return "users/findUsers";
-//	}
-	
+	// @RequestMapping(value = "/users/find", method = RequestMethod.GET)
+	// public String initFindForm(Map<String, Object> model) {
+	// model.put("user", new User());
+	// return "users/findUsers";
+	// }
+
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ModelAndView listAllUsers() {
 		ModelAndView modelAndView = new ModelAndView("users/usersList");
-		modelAndView.addObject("itemList",	(List<User>) this.userService.getAllUsers());
+		modelAndView.addObject("itemList",
+				(List<User>) this.userService.getAllUsers());
 		return modelAndView;
 	}
 
-//	@RequestMapping(value = "/users/findUser", method = RequestMethod.GET)
-//	public String processFindForm(@ModelAttribute("user") User user,
-//			BindingResult result, Map<String, Object> model) {
-//		List<User> results = new ArrayList<User>();
-//
-//		// allow parameterless GET request for /users to return all records
-//		if (user.getLogin() == null) {
-//			results = (List<User>) this.userService.getAllUsers();
-//			if (results.isEmpty()) {
-//				// no users found
-//				model.put("itemList", results);
-//				return "users/usersList";
-//			}
-//		} else {
-//			// find user by login
-//			User userFromDB = this.userService.getUser(user.getLogin());
-//			if (userFromDB != null) {
-//				results.add(userFromDB);
-//			} else {
-//				// Searched user not found
-//				result.rejectValue("login", "notFound", "not found");
-//				return "users/findUsers";
-//			}
-//		}
-//
-//		if (results.size() > 1) {
-//			// multiple users found
-//			model.put("itemList", results);
-//			return "users/usersList";
-//		} else {
-//			// 1 user found
-//			user = results.get(0);
-//			return "redirect:/users/" + user.getId();
-//		}
-//	}
+	// @RequestMapping(value = "/users/findUser", method = RequestMethod.GET)
+	// public String processFindForm(@ModelAttribute("user") User user,
+	// BindingResult result, Map<String, Object> model) {
+	// List<User> results = new ArrayList<User>();
+	//
+	// // allow parameterless GET request for /users to return all records
+	// if (user.getLogin() == null) {
+	// results = (List<User>) this.userService.getAllUsers();
+	// if (results.isEmpty()) {
+	// // no users found
+	// model.put("itemList", results);
+	// return "users/usersList";
+	// }
+	// } else {
+	// // find user by login
+	// User userFromDB = this.userService.getUser(user.getLogin());
+	// if (userFromDB != null) {
+	// results.add(userFromDB);
+	// } else {
+	// // Searched user not found
+	// result.rejectValue("login", "notFound", "not found");
+	// return "users/findUsers";
+	// }
+	// }
+	//
+	// if (results.size() > 1) {
+	// // multiple users found
+	// model.put("itemList", results);
+	// return "users/usersList";
+	// } else {
+	// // 1 user found
+	// user = results.get(0);
+	// return "redirect:/users/" + user.getId();
+	// }
+	// }
 
 	@RequestMapping(value = "/users/{userId}/edit", method = RequestMethod.GET)
 	public String initUpdateUserForm(@PathVariable("userId") int userId,
@@ -214,7 +221,30 @@ public class UserController {
 		return "redirect:/users/manage";
 
 	}
-
+	
+	// verifying user with email link clicked by user
+	@RequestMapping(value = "/confirm/{uuid}/email")
+	public ModelAndView confirmEmail(@PathVariable("uuid") String uuid) {
+		ModelAndView model = new ModelAndView("email-confirm");
+		logger.debug("UUID is " + uuid);
+		User user = this.userService.getUserByUuid(uuid);
+		StringBuilder message = new StringBuilder();
+		message.append("Your email address ");
+		if(user != null ) {
+			message.append("is confirmed successfully! You can use ecivil application as a member.");
+			user.setVerified(true);
+			user.setRole(this.roleService.getRole(ConstantUtil.ROLE_MEMBER));
+			this.userService.updateUser(user);
+			logger.debug("USERS EMAIL CONFIRMED");
+		}
+		else {
+			message.append("cant be confirmed!");
+			logger.debug("USERS EMAIL NOT CONFIRMED");
+		}
+		model.addObject("message", message.toString());
+		return model;
+	}
+	
 	// adding a responsibility to a team member
 	@RequestMapping(value = "/users/{userId}/teams/{teamId}/responsibility/add", method = RequestMethod.GET)
 	public String initResponsibilityForm(@PathVariable("userId") int userId,
@@ -254,16 +284,35 @@ public class UserController {
 		return "redirect:/users/manage";
 	}
 
-	// removing member from the team and setting his role to MEMBER in case that he is not involved in any other team 
+	// removing member from the team and setting his role to MEMBER in case that
+	// he is not involved in any other team
 	@RequestMapping(value = "/users/{userId}/teams/{teamId}/remove")
 	public String removeMember(@PathVariable("userId") int userId,
 			@PathVariable("teamId") int teamId) {
 
 		userService.removeUserFromTeam(userId, teamId);
-		
+
 		logger.debug("USER REMOVED FROM TEAM SUCCESSFULLY!");
 
 		return "redirect:/users/manage";
 
 	}
+	
+	//saving a current location of user that is logged in 
+	// called with ajax
+	 @RequestMapping(value="/users/{userName}/locations/lat/{lat}/lon/{lon}/save", 
+			 method=RequestMethod.GET)
+	 public@ResponseBody
+	  String saveUsersCurrentLocation(@PathVariable String userName, @PathVariable double lat, @PathVariable double lon) {
+		 logger.debug("SAVING LOCATION " + lat + ", " + lon + " FOR USER " + userName );
+		
+		 this.userService.saveUserLocation(userName, lat, lon);
+		
+		 logger.debug("LOCATION SUCCESSFULLY SAVED");
+		 
+		 return "LOCATION OF USER " + userName + " SAVED";
+	 }
+	 
+	 
+	
 }

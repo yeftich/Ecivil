@@ -17,7 +17,7 @@
 		<security:authorize access="isAuthenticated()">
 			<div class="headerWidget">
 				Welcome
-				<security:authentication property="principal.Username" />
+					<span 	id="loggedUser" ><security:authentication property="principal.Username" /></span>
 			</div>
 		</security:authorize>
 

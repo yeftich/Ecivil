@@ -27,4 +27,8 @@ public interface UserService {
 	public void addUserResponsibility(int userId, int teamId, String responsStr) throws DataAccessException;
 
 	public void removeUserFromTeam(int userId, int teamId) throws DataAccessException;
+
+	public User getUserByUuid(String uuid) throws DataAccessException;
+
+	void saveUserLocation(String login, double lat, double lon) throws DataAccessException;
 }

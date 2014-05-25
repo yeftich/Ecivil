@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ecivil.model.enums.EAccidentType;
 import com.ecivil.model.enums.EDangerType;
 import com.ecivil.model.event.Danger;
 import com.ecivil.model.event.Danger;
@@ -58,7 +59,11 @@ public class DangerController {
 		return EDangerType.getSelections() ;
 	}
 	
-
+	@ModelAttribute("defaultType")
+	public String populateDefaultType() {
+		return EDangerType.defaultInGreek();
+	}
+	
 	@RequestMapping(value = "/dangers/new", method = RequestMethod.GET)
 	public String initCreationDangerForm(Map<String, Object> model) {
 		logger.debug("initCreationDangerForm for new danger");

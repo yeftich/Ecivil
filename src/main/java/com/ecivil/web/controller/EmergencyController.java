@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ecivil.model.MapInfo;
 import com.ecivil.model.enums.EEventStatus;
 import com.ecivil.model.event.Accident;
 import com.ecivil.model.event.Action;
@@ -94,8 +97,30 @@ public class EmergencyController {
 		
 	}
 	
+	// AJAX 
+	@RequestMapping(value="/ajax/index", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody 
+    List<MapInfo> allEmergenciesJSON() {
+		logger.debug("AJAX GET ALL EMERGENCIES");
+		List<MapInfo> mapInfos = new ArrayList<MapInfo>();
+		List<Emergency> emergencies = this.emergencyService.getAllEmergencys();
+		if(emergencies != null) {
+			logger.debug("EMERGENCIES: " + emergencies.toString());
+			for(Emergency emergency : emergencies) {
+				String type = (emergency instanceof Accident ? "Accident" : "Danger");
+				if(emergency.hasValidLocation()) {
+					MapInfo mapinfo = new MapInfo(emergency.getId().toString(), emergency.getLocation().getLatitude().toString(), emergency.getLocation().getLongitude().toString(), type);
+					mapInfos.add(mapinfo);
+				}
+			}
+		}
+        return mapInfos;
+    }
+	
+	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView listAllEmergencys(Principal principal) {
+		logger.debug("/index listAllEmergenys method called!");
 		ModelAndView modelAndView = new ModelAndView("emergencys/emergencysList");
 		if(principal != null && principal.getName() != null) {
 			modelAndView.addObject("userLogin", principal.getName());
@@ -104,12 +129,12 @@ public class EmergencyController {
 			modelAndView.addObject("userLogin", "ANONYMOUS_USER");
 		}
 			
-		Map<DateTime, Emergency> sortedMap = new TreeMap<DateTime, Emergency>(Collections.reverseOrder());
+//		Map<DateTime, Emergency> sortedMap = new TreeMap<DateTime, Emergency>(Collections.reverseOrder());
 		
 		List<Accident> accidents = (List<Accident>) this.accidentService.getAccidentsByFreshness(EEventStatus.Active);
 		List<Danger> dangers = (List<Danger>) this.dangerService.getDangersByFreshness(EEventStatus.Active);
 		
-		for (Danger danger : dangers) {
+/*		for (Danger danger : dangers) {
 			DateTime date = null;
 			int i = 1;
 			while(sortedMap.containsKey(danger.getCreatedDateTime())) {
@@ -127,8 +152,11 @@ public class EmergencyController {
 			}
 			sortedMap.put(accident.getCreatedDateTime(), accident);
 		}
+*/		
+		List<Emergency> itemList = new ArrayList<Emergency>(accidents.size() + dangers.size());
 		
-		List<Emergency> itemList = new ArrayList<Emergency>(sortedMap.values());
+		itemList.addAll(accidents);
+		itemList.addAll(dangers);
 		
 		modelAndView.addObject("itemList", itemList);
 		return modelAndView;

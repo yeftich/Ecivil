@@ -13,9 +13,9 @@
 		<jsp:include page="fragments/header.jsp" />
 		<div class="container">
 			<jsp:include page="fragments/navBar.jsp" />
-			<h1>Welcome page</h1>
+			<h1>Email confirmation page</h1>
 			<p>
-				You have successfully logged in.<br /> <a
+				${message} <br /> <a
 					href="${pageContext.request.contextPath}/index.html">Home page</a><br />
 			</p>
 		</div>

@@ -9,7 +9,7 @@
 <%@ taglib prefix="joda" uri="http://www.joda.org/joda/time/tags"%>
 
 <jsp:include page="../fragments/headTag.jsp" />
-
+</head>
 <body>
 	<div id="main">
 		<jsp:include page="../fragments/header.jsp" />

@@ -3,6 +3,7 @@ package com.ecivil.repository.jpa;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -17,17 +18,25 @@ import com.ecivil.repository.UserDao;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-	private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
-	
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserDaoImpl.class);
+
 	@PersistenceContext
 	private EntityManager em;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public User getUser(String login) throws DataAccessException {
 		Query query = this.em
 				.createQuery("SELECT DISTINCT user FROM User user WHERE user.login = :login");
 		query.setParameter("login", login);
-		return (User) query.getSingleResult();
+
+		List<User> results = query.getResultList();
+		if (!results.isEmpty()) {
+			return results.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -53,26 +62,28 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public void updateUser(User user) throws DataAccessException {
-		logger.debug("UPDATING USER with username " + user.getLogin() + " and id " + user.getId());
+		logger.debug("UPDATING USER with username " + user.getLogin()
+				+ " and id " + user.getId());
 		this.em.merge(user);
 	}
 
 	@Override
 	public void deleteUser(int userId) throws DataAccessException {
-			this.em.remove(findUserById(userId));
+		this.em.remove(findUserById(userId));
 	}
 
 	@Override
 	public void verifyUser(int userId, int teamId) throws DataAccessException {
-		logger.debug("VERIFYING USER with userId " + userId + " for team with teamId " + teamId);
-		
-//		String sqlScript = "UPDATE user_team SET STATUS=\'"+ Verifications.Verified + 
-//				"\' WHERE USERID=" + userId + " AND TEAMID=" + teamId;
-		
+		logger.debug("VERIFYING USER with userId " + userId
+				+ " for team with teamId " + teamId);
+
+		// String sqlScript = "UPDATE user_team SET STATUS=\'"+
+		// Verifications.Verified +
+		// "\' WHERE USERID=" + userId + " AND TEAMID=" + teamId;
+
 		Query query = this.em.createNamedQuery("updateStatusNativeSQL")
-			.setParameter("status", EVerification.Verified.inGreek())
-			.setParameter("userId", userId)
-			.setParameter("teamId", teamId);
+				.setParameter("status", EVerification.Verified.inGreek())
+				.setParameter("userId", userId).setParameter("teamId", teamId);
 
 		query.executeUpdate();
 	}
@@ -80,28 +91,42 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public void addUserResponsibility(int userId, int teamId, String responsStr)
 			throws DataAccessException {
-		logger.debug("ADDING RESPONSIBILITY " + responsStr + " to USER with userId " + userId 
-				+ " and team with teamId " + teamId);
-		
+		logger.debug("ADDING RESPONSIBILITY " + responsStr
+				+ " to USER with userId " + userId + " and team with teamId "
+				+ teamId);
+
 		Query query = this.em.createNamedQuery("updateResponsibilityNativeSQL")
 				.setParameter("responsStr", responsStr)
-				.setParameter("userId", userId)
-				.setParameter("teamId", teamId);
+				.setParameter("userId", userId).setParameter("teamId", teamId);
 
-			query.executeUpdate();
+		query.executeUpdate();
 	}
 
 	@Override
 	public void removeUserFromTeam(int userId, int teamId)
 			throws DataAccessException {
-		logger.debug("REMOVING USER with userId " + userId 
+		logger.debug("REMOVING USER with userId " + userId
 				+ " from team with teamId " + teamId);
-		
-		Query query = this.em.createNamedQuery("removeUserFromTeamNativeSQL")
-				.setParameter("userId", userId)
-				.setParameter("teamId", teamId);
 
-			query.executeUpdate();
+		Query query = this.em.createNamedQuery("removeUserFromTeamNativeSQL")
+				.setParameter("userId", userId).setParameter("teamId", teamId);
+
+		query.executeUpdate();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public User getUserByUuid(String uuid) throws DataAccessException {
+		Query query = this.em
+				.createQuery("SELECT DISTINCT user FROM User user WHERE user.uuid = :uuid");
+		query.setParameter("uuid", uuid);
+
+		List<User> results = query.getResultList();
+		if (!results.isEmpty()) {
+			return results.get(0);
+		} else {
+			return null;
+		}
 	}
 
 }

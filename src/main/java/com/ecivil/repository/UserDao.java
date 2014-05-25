@@ -25,5 +25,7 @@ public interface UserDao {
 
 	public void removeUserFromTeam(int userId, int teamId) throws DataAccessException;
 
+	public User getUserByUuid(String uuid) throws DataAccessException;
+
 	
 }
