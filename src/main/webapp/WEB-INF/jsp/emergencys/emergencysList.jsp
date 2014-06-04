@@ -25,97 +25,22 @@
 				$.ajax({
 					url : getAllEmergenciesUrl,
 					type : "POST",
-
 					beforeSend : function(xhr) {
 						xhr.setRequestHeader("Accept", "application/json");
 						xhr.setRequestHeader("Content-Type", "application/json");
 					},
 					success : function(data) {
-
 						showMapWithEmergencies(data);
-/* 						// Setup the different icons and shadows
-					    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
-						
-						var icons = {
-								"Accident" : iconURLPrefix + 'red-dot.png',
-								"Danger" : iconURLPrefix + 'orange-dot.png',
-								"actionVolIcon" : iconURLPrefix + 'blue-dot.png',
-								"curLocIcon" : iconURLPrefix + 'yellow-dot.png',
-								"actionInstIcon" : iconURLPrefix + 'green-dot.png'}; 
-
-						var shadow = {
-							      anchor: new google.maps.Point(15,33),
-							      url: iconURLPrefix + 'msmarker.shadow.png'
-							    };
-						
-						var infowindow = new google.maps.InfoWindow({
-						      maxWidth: 160
-						    });
-
-					   var map = new google.maps.Map(document.getElementById('map-canvas'), {
-						      zoom: 10,
-						      center: new google.maps.LatLng(-37.92, 151.25),
-						      mapTypeId: google.maps.MapTypeId.ROADMAP
-						    });
-						var marker;
-					    var markers = new Array();
-
-				   	 	$.each(data,
-								function(idx, mapInfo) {
-				         
-				   	 		marker = new google.maps.Marker({
-				   	 			position: new google.maps.LatLng(mapInfo.lat, mapInfo.lon),
-				   	 			map: map,
-				   	 			icon : icons[mapInfo.type],
-				   	 			shadow: shadow
-				   	 		});
-				   	 		markers.push(marker);
-
-				   	 		google.maps.event.addListener(marker, 'click', (function(marker, i) {
-				   	 			return function() {
-				   	 				infowindow.setContent('<h4>' + mapInfo.id + '</h4>');
-				   	 				infowindow.open(map, marker);
-				   	 			}
-				   	 		})(marker, i));
-				   	 	}
-	 */			   	 	
-/* 				        //  Create a new viewpoint bound
-				        var bounds = new google.maps.LatLngBounds();
-				        //  Go through each...
-				        $.each(markers, function (index, marker) {
-				        	bounds.extend(marker.position);
-				        });
-				        //  Fit these bounds to the map
-				        map.fitBounds(bounds);
- */
-						/* 	        	console.log("log test 2");
-							        	console.log(data);
-							        	$.each(data, function(idx, mapInfo) {
-							        		console.log(mapInfo.id);
-							        	}); 
-							        	 console.log("log test 4"); */
 					},
 					error : function() {
 						alert('Error while request..');
 					}
 				});
 
-/* 				var myLatlng = new google.maps.LatLng(55.8611413, 37.4176317);
-				var myOptions = {
-					zoom : 16,
-					center : myLatlng,
-					mapTypeId : google.maps.MapTypeId.ROADMAP
-				}
-				map = new google.maps.Map(
-						document.getElementById("map-canvas"), myOptions);
-				var marker = new google.maps.Marker({
-					position : myLatlng,
-					map : map,
-					title : "Fast marker"
-				});
- */
+
 				$(".map-link").click(
 						function() {
+							showEventInfo(4);
 							var event_info = $(this).attr('id').split("-");
 							var event_id = null;
 							var event_lat = null;
@@ -128,10 +53,34 @@
 									+ ' longitude' + event_lon);
 						});
 			});
+	
+	function showEventInfo(eventId) {
+		$("#event-info-table tr").hide();
+		var event = "table tr.event-info-" + eventId;
+		$(event).show();
+	}
 
  	function showMapWithEmergencies(mapInfoArray) {
 		var latLonArray = new Array();
 		var markerArray = new Array();
+		// Setup the different icons and shadows
+	    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+		
+		var icons = {
+				"Accident" : iconURLPrefix + 'red-dot.png',
+				"Danger" : iconURLPrefix + 'orange-dot.png',
+				"actionVolIcon" : iconURLPrefix + 'blue-dot.png',
+				"curLocIcon" : iconURLPrefix + 'yellow-dot.png',
+				"actionInstIcon" : iconURLPrefix + 'green-dot.png'}; 
+		
+		var shadow = {
+			      anchor: new google.maps.Point(15,33),
+			      url: iconURLPrefix + 'msmarker.shadow.png'
+			    };
+		
+		var infowindow = new google.maps.InfoWindow({
+		      maxWidth: 160
+		    });
 
 		var myOptions = {
 			zoom : 10,
@@ -146,15 +95,23 @@
 					console.log(mapInfo.id);
 					latLonArray[idx] = new google.maps.LatLng(mapInfo.lat,
 							mapInfo.lon);
-					markerArray[idx] = new google.maps.Marker({
+					var marker = new google.maps.Marker({
 						position : latLonArray[idx],
 						map : map,
- 						/* 					shadow : shadow,
-											icon : image,
-											shape : shape, */
+ 						shadow : shadow,
+						icon : icons[mapInfo.type],
+						/*shape : shape, */
 	 					title : mapInfo.type
 					/* zIndex : i */
 		 			});
+					markerArray[idx] = marker;
+					
+					google.maps.event.addListener(marker, 'click', (function(marker, i) {
+		   	 			return function() {
+		   	 				infowindow.setContent('<h4>' + mapInfo.id + '</h4>');
+		   	 				infowindow.open(map, marker);
+		   	 			}
+		   	 		})(marker, i));
 
 				});
 
@@ -177,15 +134,9 @@
 			<h2>Emergencies</h2>
 
 			<div id="map-canvas"></div>
+			
+			<div id="event-info-panel"> <jsp:include page="event-info-div.jsp" /></div>
 
-			<c:choose>
-				<c:when test="${danger['new']}">
-					<c:set var="method" value="post" />
-				</c:when>
-				<c:otherwise>
-					<c:set var="method" value="put" />
-				</c:otherwise>
-			</c:choose>
 
 			<c:choose>
 				<c:when test="${fn:length(itemList) > 0}">

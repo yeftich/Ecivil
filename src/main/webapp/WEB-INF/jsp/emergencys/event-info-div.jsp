@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%> --%>
 
@@ -12,73 +11,48 @@
 <%@ taglib uri="http://www.springframework.org/security/tags"
 	prefix="security"%>
 
-<jsp:include page="../fragments/headTag.jsp" />
-</head>
-<body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
+			<h4>Event info</h4>
 
+				<c:if test="${fn:length(itemList) > 0}">
 
-			<h2>Emergencies</h2>
-
-			Latitude: <span id="latitude"></span> <br /> Longitude: <span
-				id="longitude"></span> <br />
-
-
-			<div id="map-canvas"></div>
-
-			<c:choose>
-				<c:when test="${danger['new']}">
-					<c:set var="method" value="post" />
-				</c:when>
-				<c:otherwise>
-					<c:set var="method" value="put" />
-				</c:otherwise>
-			</c:choose>
-
-			<c:choose>
-				<c:when test="${fn:length(itemList) > 0}">
-
-					<c:forEach items="${itemList}" var="emergency">
-						<table id="emergencys" class="table" style="width: 600px;">
-							<tr>
-								<td valign="top" style="width: 120px;">
+					<c:forEach items="${itemList}" var="event">
+						<table id="event-info-table" class="table" style="width: 480px;">
+							<tr class= "event-info-${event.id}" >
+								<td valign="top" style="width: 100px;">
 									<dl class="dl-horizontal">
 										<dt>Info</dt>
 										<dd>
-											<c:out value="${emergency.textDescription}" />
+											<c:out value="${event.textDescription}" />
 										</dd>
 										<dt>Created by</dt>
 										<dd>
-											<c:out value="${emergency.owner.login}" />
+											<c:out value="${event.owner.login}" />
 										</dd>
 										<dt>Created Date</dt>
 										<dd>
-											<joda:format value="${emergency.createdDateTime}"
+											<joda:format value="${event.createdDateTime}"
 												pattern="dd/MM/yyyy HH:mm:ss" />
 										</dd>
 										<dt>Type</dt>
 										<dd>
-											<c:out value="${emergency.type}" />
+											<c:out value="${event.type}" />
 										</dd>
 										<dt>Freshness</dt>
 										<dd>
-											<c:out value="${emergency.freshness}" />
+											<c:out value="${event.freshness}" />
 										</dd>
 										<dt>Certification</dt>
 										<dd>
-											<c:out value="${emergency.certification}" />
+											<c:out value="${event.certification}" />
 										</dd>
 										<dt>Place</dt>
 										<dd>
-											<c:out value="${emergency.place}" />
+											<c:out value="${event.place}" />
 										</dd>
 									</dl>
 								</td>
 								<td valign="top"><c:if
-										test="${fn:length(emergency.actions) > 0}">
+										test="${fn:length(event.actions) > 0}">
 										<table class="table-condensed">
 											<thead>
 												<tr>
@@ -88,7 +62,7 @@
 												</tr>
 											</thead>
 
-											<c:forEach var="action" items="${emergency.actions}">
+											<c:forEach var="action" items="${event.actions}">
 												<tr>
 													<td><c:out value="${action.textDescription}" /></td>
 													<td><joda:format value="${action.createdDateTime}"
@@ -100,22 +74,22 @@
 										</table>
 									</c:if></td>
 							</tr>
-							<tr>
+							<tr class= "event-info-${event.id}">
 								<td colspan="2"><spring:url
 										value="/emergencys/{emergencyId}/action/new"
 										var="newActionUrl">
-										<spring:param name="emergencyId" value="${emergency.id}" />
+										<spring:param name="emergencyId" value="${event.id}" />
 									</spring:url> <spring:url value="/emergencys/{emergencyId}/close"
 										var="closeEmergencyUrl">
-										<spring:param name="emergencyId" value="${emergency.id}" />
+										<spring:param name="emergencyId" value="${event.id}" />
 									</spring:url> <spring:url value="/emergencys/{emergencyId}/verify"
 										var="verifyEmergencyUrl">
-										<spring:param name="emergencyId" value="${emergency.id}" />
+										<spring:param name="emergencyId" value="${event.id}" />
 									</spring:url> <spring:url value="/emergencys/{emergencyId}/edit"
 										var="editEmergencyUrl">
-										<spring:param name="emergencyId" value="${emergency.id}" />
+										<spring:param name="emergencyId" value="${event.id}" />
 									</spring:url> <c:choose>
-										<c:when test="${emergency.owner.login == userLogin}">
+										<c:when test="${event.owner.login == userLogin}">
 											<a href="${fn:escapeXml(editEmergencyUrl)}">Edit</a>
 										 | 
 										<a href="${fn:escapeXml(closeEmergencyUrl)}">Close</a>
@@ -137,17 +111,5 @@
 						</table>
 					</c:forEach>
 
-				</c:when>
+				</c:if>
 
-				<c:otherwise>
-					<H4>No emergencies found</H4>
-				</c:otherwise>
-			</c:choose>
-
-			<jsp:include page="../fragments/footer.jsp" />
-
-		</div>
-	</div>
-</body>
-
-</html>
