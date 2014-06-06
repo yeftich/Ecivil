@@ -18,7 +18,7 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(
 			function() {
-				
+
 				$("#event-info-panel").hide();
 
 				var getAllEmergenciesUrl = "/ecivil/ajax/index";
@@ -57,10 +57,97 @@
 						});
 			});
 
-	function showEventInfo(eventId) {
-		$("#event-info-table tr").hide();
-		var event = "table tr.event-info-" + eventId;
-		$(event).show();
+	function showMapForEvent(eventId) {
+		var getEventUrl = "/ecivil/ajax/event/" + eventId + "/get";
+		console.log("log test getEventUrl for event with id " + eventId);
+		/* 		var json = {
+		 "eventId" : eventId
+		 }; */
+		$.ajax({
+			url : getEventUrl,
+			type : "GET",
+			/* data : JSON.stringify(json), */
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.setRequestHeader("Content-Type", "application/json");
+			},
+			success : function(data) {
+				showMapWithEvent(data);
+				/* populateEventInfo(data); */
+				showEventInfo();
+			},
+			error : function() {
+				alert('Error while request..');
+			}
+		});
+
+	}
+
+	function showEventInfo() {
+		$("#event-info-panel").show();
+		/* 		$("#event-info-table tr").hide();
+		 var event = "table tr.event-info-" + eventId; */
+		/* $(event).show(); */
+	}
+
+	function showMapWithEvent(mapInfoArray) {
+		var latLonArray = new Array();
+		var markerArray = new Array();
+		// Setup the different icons and shadows
+		var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+
+		var icons = {
+			"Accident" : iconURLPrefix + 'red-dot.png',
+			"Danger" : iconURLPrefix + 'orange-dot.png',
+			"actionVolIcon" : iconURLPrefix + 'blue-dot.png',
+			"curLocIcon" : iconURLPrefix + 'yellow-dot.png',
+			"actionInstIcon" : iconURLPrefix + 'green-dot.png'
+		};
+
+		var shadow = {
+			anchor : new google.maps.Point(15, 33),
+			url : iconURLPrefix + 'msmarker.shadow.png'
+		};
+
+		/* 		var infowindow = new google.maps.InfoWindow({
+		 maxWidth : 160
+		 }); */
+
+		console.log("lat = " + mapInfoArray[0].lat + " lon = "
+				+ mapInfoArray[0].lon);
+		var myOptions = {
+			zoom : 10,
+			center : new google.maps.LatLng(mapInfoArray[0].lat,
+					mapInfoArray[0].lon),
+			mapTypeId : google.maps.MapTypeId.ROADMAP
+		}
+
+		var eventMap = new google.maps.Map(document
+				.getElementById("map-canvas"));
+
+		$.each(mapInfoArray, function(idx, mapInfo) {
+			console.log(mapInfo.id);
+			if (mapInfo.lat != 0 && mapInfo.lon != 0) {
+				latLonArray[idx] = new google.maps.LatLng(mapInfo.lat,
+						mapInfo.lon);
+				var marker = new google.maps.Marker({
+					position : latLonArray[idx],
+					map : eventMap,
+					shadow : shadow,
+					icon : icons[mapInfo.type],
+					/*shape : shape, */
+					title : mapInfo.type
+				/* zIndex : i */
+				});
+				markerArray[idx] = marker;
+
+			}
+
+		});
+
+		eventMap.setCenter(new google.maps.LatLng(mapInfoArray[0].lat,
+				mapInfoArray[0].lon));
+
 	}
 
 	function showMapWithEmergencies(mapInfoArray) {
@@ -86,41 +173,52 @@
 			maxWidth : 160
 		});
 
+		var centerLat = 0;
+		var centerLon = 0;
+		$.each(mapInfoArray, function(indx, mapInfoo) {
+			if (mapInfoo.lat != 0 && mapInfoo.lon != 0) {
+				centerLat = mapInfoo.lat;
+				centerLon = mapInfoo.lon;
+				return false;
+			}
+		});
+
 		var myOptions = {
 			zoom : 10,
-			center : new google.maps.LatLng(mapInfoArray[0].lat,
-					mapInfoArray[0].lon),
+			center : new google.maps.LatLng(centerLat, centerLon),
 			mapTypeId : google.maps.MapTypeId.ROADMAP
 		}
 
 		var map = new google.maps.Map(document.getElementById("map-canvas"));
 
-		$.each(mapInfoArray,
-				function(idx, mapInfo) {
-					console.log(mapInfo.id);
-					latLonArray[idx] = new google.maps.LatLng(mapInfo.lat,
-							mapInfo.lon);
-					var marker = new google.maps.Marker({
-						position : latLonArray[idx],
-						map : map,
-						shadow : shadow,
-						icon : icons[mapInfo.type],
-						/*shape : shape, */
-						title : mapInfo.type
-					/* zIndex : i */
-					});
-					markerArray[idx] = marker;
-
-					google.maps.event.addListener(marker, 'click', (function(
-							marker, i) {
-						return function() {
-							infowindow
-									.setContent('<h4>' + mapInfo.id + '</h4>');
-							infowindow.open(map, marker);
-						}
-					})(marker, i));
-
+		$.each(mapInfoArray, function(idx, mapInfo) {
+			console.log(mapInfo.id);
+			if (mapInfo.lat != 0 && mapInfo.lon != 0) {
+				latLonArray[idx] = new google.maps.LatLng(mapInfo.lat,
+						mapInfo.lon);
+				var marker = new google.maps.Marker({
+					position : latLonArray[idx],
+					map : map,
+					shadow : shadow,
+					icon : icons[mapInfo.type],
+					/*shape : shape, */
+					title : mapInfo.type
+				/* zIndex : i */
 				});
+				markerArray[idx] = marker;
+
+				google.maps.event.addListener(marker, 'click', (function(
+						marker, i) {
+					return function() {
+						showMapForEvent(mapInfo.id);
+						/* 							infowindow
+						 .setContent('<h4>' + mapInfo.id + '</h4>');
+						 infowindow.open(map, marker); */
+					}
+				})(marker, i));
+			}
+
+		});
 
 		var latlngbounds = new google.maps.LatLngBounds();
 		for (var i = 0; i < latLonArray.length; i++) {
