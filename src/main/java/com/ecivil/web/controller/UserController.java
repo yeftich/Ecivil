@@ -85,6 +85,7 @@ public class UserController {
 			model.put("message", "User name already exists!");
 			return "users/createOrUpdateUserForm";
 		} else {
+			user.setCurrent_location(new Location());
 			this.userService.createUser(user);
 			
 			return "redirect:/users/" + user.getId();
@@ -308,8 +309,6 @@ public class UserController {
 		
 		 this.userService.saveUserLocation(userName, lat, lon);
 		
-		 logger.debug("LOCATION SUCCESSFULLY SAVED");
-		 
 		 return "LOCATION OF USER " + userName + " SAVED";
 	 }
 	 

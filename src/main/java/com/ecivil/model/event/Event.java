@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -70,7 +71,7 @@ public abstract class Event implements Serializable {
     @Column(name = "CERTIFICATION", nullable = false)
     private String certification;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL)
     @JoinColumn(name = "LOCATION_ID")
     private Location location;
     

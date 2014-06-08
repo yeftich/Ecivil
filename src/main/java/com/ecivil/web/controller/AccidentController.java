@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ecivil.model.Location;
 import com.ecivil.model.enums.EAccidentType;
 import com.ecivil.model.event.Accident;
 import com.ecivil.model.user.User;
@@ -30,7 +31,7 @@ import com.ecivil.service.UserService;
  * 
  */
 @Controller
-@SessionAttributes({ "accident"})
+@SessionAttributes({ "accident" })
 public class AccidentController {
 
 	private static final Logger logger = LoggerFactory
@@ -40,11 +41,12 @@ public class AccidentController {
 	private final UserService userService;
 
 	@Autowired
-	public AccidentController(AccidentService accidentService, UserService userService) {
+	public AccidentController(AccidentService accidentService,
+			UserService userService) {
 		this.accidentService = accidentService;
 		this.userService = userService;
 	}
-	
+
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id");
@@ -54,36 +56,46 @@ public class AccidentController {
 	public Map<String, String> populateAccidentTypesList() {
 		return EAccidentType.getSelections();
 	}
-	
+
 	@ModelAttribute("defaultType")
 	public String populateDefaultType() {
 		return EAccidentType.defaultInGreek();
 	}
-	
-	
+
 	@RequestMapping(value = "/accidents/new", method = RequestMethod.GET)
 	public String initCreationAccidentForm(Map<String, Object> model) {
 		logger.debug("initCreationAccidentForm for new accident");
 
 		Accident accident = new Accident();
-		model.put("accident", accident);
+		User owner = userService.getLoggedInUser();
+		logger.debug("LOGGED IN USER IS " + owner.getLastName()
+				+ " and his location is " + owner.getCurrent_location());
+		if (owner.hasValidLocation()) {
+			Location loc = new Location();
+			loc.setLatitude(owner.getCurrent_location().getLatitude());
+			loc.setLongitude(owner.getCurrent_location().getLongitude());
+			accident.setLocation(loc);
+		}
+		accident.setOwner(owner);
+		accident.setType(EAccidentType.defaultInGreek());
+		Accident savedAccident = this.accidentService.saveAccident(accident);
+		model.put("accident", savedAccident);
+		model.put("accidentIsNew", new Boolean(true));
+		logger.debug("NEW ACCIDENT SAVED with id " + savedAccident.getId()
+				+ " Created by " + owner.getLastName()
+				+ " and his location is " + owner.getCurrent_location());
 		return "accidents/createOrUpdateAccidentForm";
 	}
 
 	@RequestMapping(value = "/accidents/new", method = RequestMethod.POST)
-	public String processCreationAccidentForm(@ModelAttribute("accident") Accident accident, BindingResult result,
-			SessionStatus status) {
+	public String processCreationAccidentForm(
+			@ModelAttribute("accident") Accident accident,
+			BindingResult result, SessionStatus status) {
 		logger.debug("proccessCreationForm for new accident");
 
 		if (result.hasErrors()) {
 			return "accidents/createOrUpdateAccidentForm";
 		} else {
-			User owner = userService.getLoggedInUser();
-			logger.debug("LOGGED IN USER IS " + owner.getLastName() + " and his location is " + owner.getCurrent_location());
-			if(owner.hasValidLocation()) {
-				accident.setLocation(owner.getCurrent_location());
-			}
-			accident.setOwner(owner);
 			this.accidentService.saveAccident(accident);
 			status.setComplete();
 			return "redirect:/accidents/" + accident.getId();
@@ -93,25 +105,28 @@ public class AccidentController {
 	@RequestMapping(value = "/accidents", method = RequestMethod.GET)
 	public ModelAndView listAllAccidents() {
 		ModelAndView modelAndView = new ModelAndView("accidents/accidentsList");
-		modelAndView.addObject("itemList",	(List<Accident>) this.accidentService.getAllAccidents());
+		modelAndView.addObject("itemList",
+				(List<Accident>) this.accidentService.getAllAccidents());
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "/accidents/{accidentId}/edit", method = RequestMethod.GET)
-	public String initUpdateAccidentForm(@PathVariable("accidentId") int accidentId,
-			Model model) {
+	public String initUpdateAccidentForm(
+			@PathVariable("accidentId") int accidentId, Model model) {
 		Accident accident = this.accidentService.findAccidentById(accidentId);
 		model.addAttribute("accident", accident);
 		return "accidents/createOrUpdateAccidentForm";
 	}
 
 	@RequestMapping(value = "/accidents/{accidentId}/edit", method = RequestMethod.PUT)
-	public String processUpdateAccidentForm(@PathVariable("accidentId") int accidentId, @ModelAttribute("accident") Accident accident, BindingResult result,
-			SessionStatus status) {
+	public String processUpdateAccidentForm(
+			@PathVariable("accidentId") int accidentId,
+			@ModelAttribute("accident") Accident accident,
+			BindingResult result, SessionStatus status) {
 		if (result.hasErrors()) {
 			return "accidents/createOrUpdateAccidentForm";
 		} else {
-			if(accident.getId() == null) {
+			if (accident.getId() == null) {
 				accident.setId(accidentId);
 			}
 			this.accidentService.saveAccident(accident);
@@ -126,6 +141,5 @@ public class AccidentController {
 		mav.addObject(this.accidentService.findAccidentById(accidentId));
 		return mav;
 	}
-
 
 }

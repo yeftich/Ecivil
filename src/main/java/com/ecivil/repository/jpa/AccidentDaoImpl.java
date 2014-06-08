@@ -14,30 +14,30 @@ import com.ecivil.model.event.Accident;
 import com.ecivil.repository.AccidentDao;
 
 /**
- * @author Milan 
- *	17 мая 2014 г.  -  16:21:34
- *
+ * @author Milan 17 мая 2014 г. - 16:21:34
+ * 
  */
 @Repository
 public class AccidentDaoImpl implements AccidentDao {
 
 	@PersistenceContext
 	private EntityManager em;
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Accident> getAllAccidents() throws DataAccessException {
-		Query query = this.em.createQuery("from Accident ORDER BY createdDateTime desc");
+		Query query = this.em
+				.createQuery("from Accident ORDER BY createdDateTime desc");
 		return query.getResultList();
 	}
 
 	@Override
-	public void saveAccident(Accident accident) throws DataAccessException {
+	public Accident saveAccident(Accident accident) throws DataAccessException {
+		Accident savedAccident = this.em.merge(accident);
 		if (accident.isNew()) {
-			this.em.persist(accident);
-		} else {
-			this.em.merge(accident);
+			this.em.flush();
 		}
+		return savedAccident;
 	}
 
 	@Override
@@ -55,7 +55,8 @@ public class AccidentDaoImpl implements AccidentDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Accident> getAccidentsByFreshness(EEventStatus freshness) throws DataAccessException {
+	public List<Accident> getAccidentsByFreshness(EEventStatus freshness)
+			throws DataAccessException {
 		Query query = this.em
 				.createQuery("SELECT DISTINCT accident FROM Accident accident WHERE accident.freshness = :freshness");
 		query.setParameter("freshness", freshness.inGreek());

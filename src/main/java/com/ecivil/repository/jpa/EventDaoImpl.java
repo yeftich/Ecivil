@@ -57,4 +57,14 @@ public class EventDaoImpl implements EventDao{
 
 			query.executeUpdate();		
 	}
+	
+	@Override
+	public void deleteEvent(int eventId) throws DataAccessException {
+		Event event = em.find(Event.class, eventId);
+		event.setOwner(null);
+		em.merge(event);
+		em.flush();
+		event = em.find(Event.class, eventId);
+		this.em.remove(event);	
+	}
 }

@@ -10,11 +10,30 @@ public class MapInfo {
 	private String lat;
 	private String lon;
 	private String type;
+	private String description;
+	private String started;
+	private String owner;
+	private String verified;
 	
 	public MapInfo() {
 		
 	}
 
+	// used like JSON for getting event with actions
+	public MapInfo(String id, String lat, String lon, String type,
+			String description, String started, String owner, String verified) {
+		super();
+		this.id = id;
+		this.lat = lat;
+		this.lon = lon;
+		this.type = type;
+		this.description = description;
+		this.started = started;
+		this.owner = owner;
+		this.verified = verified;
+	}
+
+	// used li JSON for getting all emergencies with ajax
 	public MapInfo(String id, String lat, String lon, String type) {
 		super();
 		this.id = id;
@@ -54,7 +73,37 @@ public class MapInfo {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getStarted() {
+		return started;
+	}
+
+	public void setStarted(String started) {
+		this.started = started;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getVerified() {
+		return verified;
+	}
+
+	public void setVerified(String verified) {
+		this.verified = verified;
+	}
 	
 }

@@ -62,8 +62,6 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public void updateUser(User user) throws DataAccessException {
-		logger.debug("UPDATING USER with username " + user.getLogin()
-				+ " and id " + user.getId());
 		this.em.merge(user);
 	}
 

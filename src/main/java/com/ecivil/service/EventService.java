@@ -19,5 +19,7 @@ public interface EventService {
 	void closeEvent(int eventId);
 
 	void verifyEvent(int eventId);
+	
+	void deleteEvent(int eventId);
 		
 }

@@ -16,7 +16,7 @@ public interface AccidentDao {
 	
 	public List<Accident> getAllAccidents() throws DataAccessException;
 
-	public void saveAccident(Accident accident) throws DataAccessException;
+	public Accident saveAccident(Accident accident) throws DataAccessException;
 
 	public Accident findAccidentById(int accidentId) throws DataAccessException;
 

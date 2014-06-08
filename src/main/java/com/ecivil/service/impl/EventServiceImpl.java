@@ -38,4 +38,10 @@ public class EventServiceImpl implements EventService{
 		this.eventDao.verifyEvent(eventId);
 	}
 
+	@Override
+	@Transactional
+	public void deleteEvent(int eventId) {
+		this.eventDao.deleteEvent(eventId);
+	}
+
 }

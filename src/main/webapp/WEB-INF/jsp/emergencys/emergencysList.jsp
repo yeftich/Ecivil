@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%> --%>
 
@@ -16,46 +16,77 @@
 
 
 <script type="text/javascript" charset="utf-8">
-	$(document).ready(
-			function() {
+	// google map v3
+	var map;
+	// locations of events
+	var latLonArray = new Array();
+	// markers for events to draw
+	var markerArray = new Array();
 
-				$("#event-info-panel").hide();
+	// Setup the different icons and shadows
+	var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 
-				var getAllEmergenciesUrl = "/ecivil/ajax/index";
-				console.log("log test 1");
-				$.ajax({
-					url : getAllEmergenciesUrl,
-					type : "POST",
-					beforeSend : function(xhr) {
-						xhr.setRequestHeader("Accept", "application/json");
-						xhr
-								.setRequestHeader("Content-Type",
-										"application/json");
-					},
-					success : function(data) {
-						showMapWithEmergencies(data);
-					},
-					error : function() {
-						alert('Error while request..');
-					}
-				});
+	var icons = {
+		"Accident" : iconURLPrefix + 'red-dot.png',
+		"Danger" : iconURLPrefix + 'orange-dot.png',
+		"actionVolIcon" : iconURLPrefix + 'blue-dot.png',
+		"curLocIcon" : iconURLPrefix + 'yellow-dot.png',
+		"actionInstIcon" : iconURLPrefix + 'green-dot.png'
+	};
 
-				$(".map-link").click(
-						function() {
+	var shadow = {
+		anchor : new google.maps.Point(15, 33),
+		url : iconURLPrefix + 'msmarker.shadow.png'
+	};
 
-							var event_info = $(this).attr('id').split("-");
-							var event_id = null;
-							var event_lat = null;
-							var event_lon = null;
-							showEventInfo(4);
-							event_id = event_info[0].replace('eventId', '');
-							event_lat = event_info[1].replace('lat', '');
-							event_lon = event_info[2].replace('lon', '');
-							alert('we press show map for event with id '
-									+ event_id + ' latitutude ' + event_lat
-									+ ' longitude' + event_lon);
-						});
-			});
+	var infowindow = new google.maps.InfoWindow({
+		maxWidth : 160
+	});
+
+	$(document).ready(function() {
+
+		drawAllEmergencies();
+		$("#show-all-button").click(function() {
+			drawAllEmergencies();
+		});
+
+		$(".map-link").click(function() {
+
+			var event_id = $(this).attr('id').replace('eventId', '');
+			showMapForEvent(event_id);
+			/* 			var event_info = $(this).attr('id').split("-");
+			 var event_id = null;
+			 *//* 							var event_lat = null;
+																																				 var event_lon = null; */
+			/* 		event_id = event_info[0].replace('eventId', '');
+			 *//* 							event_lat = event_info[1].replace('lat', '');
+																																					 event_lon = event_info[2].replace('lon', ''); */
+
+		});
+	});
+
+	function drawAllEmergencies() {
+		$("#event-info-panel").hide();
+		$('#map-canvas').removeClass('alert alert-info');
+
+		var getAllEmergenciesUrl = "/ecivil/ajax/index";
+
+		$.ajax({
+			url : getAllEmergenciesUrl,
+			type : "POST",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("Accept", "application/json");
+				xhr.setRequestHeader("Content-Type", "application/json");
+			},
+			success : function(data) {
+				showMapWithEmergencies(data);
+			},
+			error : function() {
+				alert('Error while request..');
+			}
+		});
+
+	}
 
 	function showMapForEvent(eventId) {
 		var getEventUrl = "/ecivil/ajax/event/" + eventId + "/get";
@@ -72,9 +103,9 @@
 				xhr.setRequestHeader("Content-Type", "application/json");
 			},
 			success : function(data) {
-				showMapWithEvent(data);
-				/* populateEventInfo(data); */
-				showEventInfo();
+				drawMapWithEvent(data);
+				populateEventTable(data);
+				$("#event-info-panel").show();
 			},
 			error : function() {
 				alert('Error while request..');
@@ -82,96 +113,105 @@
 		});
 
 	}
+	/* 
+	 function showEventInfo() {
+	 $("#event-info-panel").show(); */
+	/* 		$("#event-info-table tr").hide();
+	 var event = "table tr.event-info-" + eventId; */
+	/* $(event).show(); */
+	/* } */
 
-	function showEventInfo() {
-		$("#event-info-panel").show();
-		/* 		$("#event-info-table tr").hide();
-		 var event = "table tr.event-info-" + eventId; */
-		/* $(event).show(); */
-	}
+	function drawMapWithEvent(mapInfoArray) {
 
-	function showMapWithEvent(mapInfoArray) {
-		var latLonArray = new Array();
-		var markerArray = new Array();
-		// Setup the different icons and shadows
-		var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+		$('#em-header-many').hide();
+		$('#em-header-one').show();
 
-		var icons = {
-			"Accident" : iconURLPrefix + 'red-dot.png',
-			"Danger" : iconURLPrefix + 'orange-dot.png',
-			"actionVolIcon" : iconURLPrefix + 'blue-dot.png',
-			"curLocIcon" : iconURLPrefix + 'yellow-dot.png',
-			"actionInstIcon" : iconURLPrefix + 'green-dot.png'
-		};
+		map = null;
 
-		var shadow = {
-			anchor : new google.maps.Point(15, 33),
-			url : iconURLPrefix + 'msmarker.shadow.png'
-		};
+		if (mapInfoArray[0].lat != 0 && mapInfoArray[0].lon != 0) {
 
-		/* 		var infowindow = new google.maps.InfoWindow({
-		 maxWidth : 160
-		 }); */
-
-		console.log("lat = " + mapInfoArray[0].lat + " lon = "
-				+ mapInfoArray[0].lon);
-		var myOptions = {
-			zoom : 10,
-			center : new google.maps.LatLng(mapInfoArray[0].lat,
-					mapInfoArray[0].lon),
-			mapTypeId : google.maps.MapTypeId.ROADMAP
-		}
-
-		var eventMap = new google.maps.Map(document
-				.getElementById("map-canvas"));
-
-		$.each(mapInfoArray, function(idx, mapInfo) {
-			console.log(mapInfo.id);
-			if (mapInfo.lat != 0 && mapInfo.lon != 0) {
-				latLonArray[idx] = new google.maps.LatLng(mapInfo.lat,
-						mapInfo.lon);
-				var marker = new google.maps.Marker({
-					position : latLonArray[idx],
-					map : eventMap,
-					shadow : shadow,
-					icon : icons[mapInfo.type],
-					/*shape : shape, */
-					title : mapInfo.type
-				/* zIndex : i */
-				});
-				markerArray[idx] = marker;
-
+			var myEventMapOptions = {
+				zoom : 10,
+				center : new google.maps.LatLng(mapInfoArray[0].lat,
+						mapInfoArray[0].lon),
+				mapTypeId : google.maps.MapTypeId.ROADMAP
 			}
 
-		});
+			map = new google.maps.Map(document.getElementById("map-canvas"),
+					myEventMapOptions);
 
-		eventMap.setCenter(new google.maps.LatLng(mapInfoArray[0].lat,
-				mapInfoArray[0].lon));
+			$.each(mapInfoArray, function(idx, mapInfo) {
+				console.log(mapInfo.id + " --> latLon: " + mapInfo.lat + ", "
+						+ mapInfo.lon);
+				if (mapInfo.lat != 0 && mapInfo.lon != 0) {
+					latLonArray[idx] = new google.maps.LatLng(mapInfo.lat,
+							mapInfo.lon);
+					var marker = new google.maps.Marker({
+						position : latLonArray[idx],
+						map : map,
+						shadow : shadow,
+						icon : icons[mapInfo.type],
+						/*shape : shape, */
+						title : mapInfo.type
+					/* zIndex : i */
+					});
+					markerArray[idx] = marker;
+				}
+			});
+		} else {
+			$('#map-canvas')
+					.html(
+							'<div class="alert alert-info">Το συγκεκριμένο συμβάν δεν έχει θέση στον χάρτη.</div>');
+		}
+		/* 
+		 eventMap.setCenter(new google.maps.LatLng(mapInfoArray[0].lat,
+		 mapInfoArray[0].lon)); */
+
+	}
+
+	function populateEventTable(data) {
+		var r = new Array(), j = -1;
+		r[++j] = '<tr><td><dl class="dl-horizontal"><dt>Description</dt><dd>';
+		r[++j] = data[0].description;
+		r[++j] = '</dd><dt>Started</dt><dd>';
+		r[++j] = data[0].started;
+		r[++j] = '</dd><dt>Type</dt><dd>';
+		r[++j] = data[0].type;
+		r[++j] = '</dd>	<dt>Created by</dt><dd>';
+		r[++j] = data[0].owner;
+		r[++j] = '</dd>	<dt>Verified</dt><dd>';
+		r[++j] = data[0].verified;
+		r[++j] = '</dd>	</dl></td><tr>';
+		$('#event-info-table').html(r.join(''));
+
+		r = new Array();
+		j = -1;
+		r[++j] = '<tr><td colspan="3">Actions</td></tr>';
+		r[++j] = '<tr><td><em>Info</em></td><td><em>Start</em></td><td><em>User</em></td></tr>';
+		for (var key = 1, size = data.length; key < size; key++) {
+			r[++j] = '<tr><td>';
+			r[++j] = data[key].description;
+			r[++j] = '</td><td>';
+			r[++j] = data[key].started;
+			r[++j] = '</td><td>';
+			r[++j] = data[key].owner;
+			r[++j] = '</td></tr>';
+		}
+
+		$('#actions-info-table').html(r.join(''));
+
+		if (data.length > 1) {
+			$('#actions-info-table').show();
+		} else {
+			$('#actions-info-table').hide();
+		}
 
 	}
 
 	function showMapWithEmergencies(mapInfoArray) {
-		var latLonArray = new Array();
-		var markerArray = new Array();
-		// Setup the different icons and shadows
-		var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 
-		var icons = {
-			"Accident" : iconURLPrefix + 'red-dot.png',
-			"Danger" : iconURLPrefix + 'orange-dot.png',
-			"actionVolIcon" : iconURLPrefix + 'blue-dot.png',
-			"curLocIcon" : iconURLPrefix + 'yellow-dot.png',
-			"actionInstIcon" : iconURLPrefix + 'green-dot.png'
-		};
-
-		var shadow = {
-			anchor : new google.maps.Point(15, 33),
-			url : iconURLPrefix + 'msmarker.shadow.png'
-		};
-
-		var infowindow = new google.maps.InfoWindow({
-			maxWidth : 160
-		});
+		$('#em-header-one').hide();
+		$('#em-header-many').show();
 
 		var centerLat = 0;
 		var centerLon = 0;
@@ -189,7 +229,8 @@
 			mapTypeId : google.maps.MapTypeId.ROADMAP
 		}
 
-		var map = new google.maps.Map(document.getElementById("map-canvas"));
+		map = null;
+		map = new google.maps.Map(document.getElementById("map-canvas"));
 
 		$.each(mapInfoArray, function(idx, mapInfo) {
 			console.log(mapInfo.id);
@@ -236,83 +277,70 @@
 			<jsp:include page="../fragments/navBar.jsp" />
 
 
-			<h2>Emergencies</h2>
 
-			<div id="map-canvas"></div>
+			<h3 id="em-header-many">Emergencies</h3>
 
+			<h3 id="em-header-one">Emergency</h3>
 
-			<div id="event-info-panel">
-				<div id="event-info">
-					<table id="event-info-table" class="table">
-						<tr>
-							<td>
-								<dl class="dl-horizontal">
-									<dt>Description</dt>
-									<dd>...</dd>
-									<dt>Started</dt>
-									<dd>...</dd>
-									<dt>Type</dt>
-									<dd>...</dd>
-									<dt>Created by</dt>
-									<dd>...</dd>
-									<dt>Verified</dt>
-									<dd>...</dd>
-								</dl>
-							</td>
-							<td>
-								<table id="actions-info-table" class="table table-condensed">
-									<thead>
-										<tr>
-											<th>Description</th>
-											<th>Started</th>
-											<th>Created by</th>
-										</tr>
-									</thead>
-									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-
-						<tr>
-							<td colspan="2" id="event-info-commands"><spring:url
-									value="/emergencys/{emergencyId}/action/new" var="newActionUrl">
-									<spring:param name="emergencyId" value="${event.id}" />
-								</spring:url> <spring:url value="/emergencys/{emergencyId}/close"
-									var="closeEmergencyUrl">
-									<spring:param name="emergencyId" value="${event.id}" />
-								</spring:url> <spring:url value="/emergencys/{emergencyId}/verify"
-									var="verifyEmergencyUrl">
-									<spring:param name="emergencyId" value="${event.id}" />
-								</spring:url> <spring:url value="/emergencys/{emergencyId}/edit"
-									var="editEmergencyUrl">
-									<spring:param name="emergencyId" value="${event.id}" />
-								</spring:url> <c:choose>
-									<c:when test="${event.owner.login == userLogin}">
-										<a href="${fn:escapeXml(editEmergencyUrl)}">Edit</a>
-										 | 
-										<a href="${fn:escapeXml(closeEmergencyUrl)}">Close</a>
-									</c:when>
-									<c:otherwise>
-										<security:authorize
-											access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
-											<a href="${fn:escapeXml(newActionUrl)}">Participate</a>
-													  |  
-												<a href="${fn:escapeXml(verifyEmergencyUrl)}">Verify</a>
-													  | 
-												<a href="${fn:escapeXml(closeEmergencyUrl)}">Close</a>
-										</security:authorize>
-									</c:otherwise>
-								</c:choose></td>
-						</tr>
-
-					</table>
+			<!-- 			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Panel title</h3>
 				</div>
-
+				<div class="panel-body">Panel content</div>
 			</div>
+			 -->
+
+
+
+			<div class="row">
+				<!-- span numbers must add up to 12 -->
+				<div class="span6">
+					<div id="map-canvas"></div>
+				</div>
+				<div class="span4">
+					<div id="event-info-panel">
+
+						<div class="row">
+							<div class="span4">
+								<table id="event-info-table" class="table">
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="span4">
+								<div id="event-info-commands">
+									<div class="btn-group">
+
+										<a id="show-all-button" href='#' class="btn btn-mini">Show
+											all</a>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="span4">
+								<table id="actions-info-table" class="table table-condensed">
+								</table>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="span2">
+					<div id="admin-info-messages"></div>
+				</div>
+			</div>
+			<%-- 						
+ --%>
+
+
+
+
+
+
 
 
 			<c:choose>
@@ -320,9 +348,10 @@
 
 					<datatables:table id="emergencys" data="${itemList}" cdn="true"
 						row="emergency" theme="bootstrap2" cssClass="table table-striped"
-						paginate="false" info="false">
+						paginate="false" info="false" sort="false">
 
-						<datatables:column title="Created date" sortType="date">
+						<datatables:column title="Created date" format="{0,dd/MM/yyyy HH:mm:ss}" sortType="natural"
+							sortInit="desc">
 							<joda:format value="${emergency.createdDateTime}"
 								pattern="dd/MM/yyyy HH:mm:ss" />
 						</datatables:column>
@@ -343,12 +372,53 @@
 									value="${emergency.owner.login}" /></a>
 						</datatables:column>
 
+						<spring:url value="/emergencys/{emergencyId}/action/new"
+							var="newActionUrl">
+							<spring:param name="emergencyId" value="${emergency.id}" />
+						</spring:url>
+						<spring:url value="/emergencys/{emergencyId}/close"
+							var="closeEmergencyUrl">
+							<spring:param name="emergencyId" value="${emergency.id}" />
+						</spring:url>
+						<spring:url value="/emergencys/{emergencyId}/verify"
+							var="verifyEmergencyUrl">
+							<spring:param name="emergencyId" value="${emergency.id}" />
+						</spring:url>
+						<spring:url value="/emergencys/{emergencyId}/edit"
+							var="editEmergencyUrl">
+							<spring:param name="emergencyId" value="${emergency.id}" />
+						</spring:url>
 
 
 						<datatables:column display="html">
-							<a class="map-link"
-								id="eventId${emergency.id}-lat${emergency.location.latitude}-lon${emergency.location.longitude}"
-								href='#' class="btn btn-danger btn-mini">Show on map</a>
+							<div class="button-group">
+								<c:choose>
+									<c:when test="${emergency.owner.login == userLogin}">
+										<a href="${fn:escapeXml(editEmergencyUrl)}"
+											class="btn btn-mini">Edit</a>
+
+										<a href="${fn:escapeXml(closeEmergencyUrl)}"
+											class="btn btn-mini">Close</a>
+									</c:when>
+									<c:otherwise>
+										<security:authorize
+											access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
+											<a href="${fn:escapeXml(newActionUrl)}" class="btn btn-mini">Participate</a>
+
+											<a href="${fn:escapeXml(verifyEmergencyUrl)}"
+												class="btn btn-mini">Verify</a>
+
+											<a href="${fn:escapeXml(closeEmergencyUrl)}"
+												class="btn btn-mini">Close</a>
+										</security:authorize>
+									</c:otherwise>
+								</c:choose>
+									<a class="btn btn-mini map-link" id="eventId${emergency.id}" href='#'><i
+								class="icon-map-marker"></i></a>
+							</div>
+						
+
+
 						</datatables:column>
 
 					</datatables:table>

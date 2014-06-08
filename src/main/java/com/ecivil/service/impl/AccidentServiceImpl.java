@@ -25,8 +25,8 @@ public class AccidentServiceImpl implements AccidentService{
 
 	@Override
 	@Transactional
-	public void saveAccident(Accident accident) throws DataAccessException {
-		accidentDao.saveAccident(accident);
+	public Accident saveAccident(Accident accident) throws DataAccessException {
+		return accidentDao.saveAccident(accident);
 	}
 
 	@Override

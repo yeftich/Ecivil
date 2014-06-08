@@ -91,7 +91,7 @@ public class User implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "owner")
     private Set<Event> events;
 	
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL)
     /*@Cascade({CascadeType.SAVE_UPDATE})*/
     @JoinColumn(name = "CURRENT_LOCATION")
     private Location current_location;

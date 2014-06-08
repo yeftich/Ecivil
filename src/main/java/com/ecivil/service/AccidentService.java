@@ -18,7 +18,7 @@ public interface AccidentService {
 
 	Accident findAccidentById(int accidentId) throws DataAccessException;
 
-	void saveAccident(Accident accident) throws DataAccessException;
+	Accident saveAccident(Accident accident) throws DataAccessException;
 
 	public void deleteAccident(int accidentId)  throws DataAccessException;
 	

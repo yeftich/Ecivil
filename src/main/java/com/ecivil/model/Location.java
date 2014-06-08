@@ -30,6 +30,8 @@ public class Location implements Serializable {
 	private Double longitude;
 
 	public Location() {
+		this.latitude = 0d;
+		this.longitude = 0d;
 	}
 	
 	public Integer getId() {

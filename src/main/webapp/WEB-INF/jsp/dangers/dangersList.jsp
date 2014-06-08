@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -63,11 +63,12 @@
 
 						<datatables:column display="html">
 							<security:authorize access="hasAnyRole('ROLE_ADMIN')">
-								<spring:url value="/dangers/{dangerId}/delete.html"
+								<spring:url value="/events/{eventType}/{eventId}/delete.html"
 									var="dangerDeleteUrl">
-									<spring:param name="dangerId" value="${danger.id}" />
+									<spring:param name="eventId" value="${danger.id}" />
+									<spring:param name="eventType" value="dangers" />
 								</spring:url>
-								<a href='${fn:escapeXml(dangerDeleteUrl)}'
+							<a href='${fn:escapeXml(dangerDeleteUrl)}'
 									class="btn btn-danger btn-mini">Delete Danger</a>
 							</security:authorize>
 						</datatables:column>

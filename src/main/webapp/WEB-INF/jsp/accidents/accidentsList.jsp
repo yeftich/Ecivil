@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -106,9 +106,10 @@
 
 						<datatables:column display="html">
 							<security:authorize access="hasAnyRole('ROLE_ADMIN')">
-								<spring:url value="/accidents/{accidentId}/delete.html"
+								<spring:url value="/events/{eventType}/{eventId}/delete.html"
 									var="accidentDeleteUrl">
-									<spring:param name="accidentId" value="${accident.id}" />
+									<spring:param name="eventId" value="${accident.id}" />
+									<spring:param name="eventType" value="accidents" />
 								</spring:url>
 								<a href='${fn:escapeXml(accidentDeleteUrl)}'
 									class="btn btn-danger btn-mini">Delete Accident</a>

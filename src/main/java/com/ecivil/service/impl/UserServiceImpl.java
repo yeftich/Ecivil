@@ -175,7 +175,19 @@ public class UserServiceImpl implements UserService {
 	public void saveUserLocation(String login, double lat, double lon)
 			throws DataAccessException {
 		User user = this.userDao.getUser(login);
-		boolean save = true;
+		Location currentLoc = user.getCurrent_location();
+		if(currentLoc == null) {
+			currentLoc = new Location();
+		}
+		if(lat != 0d && lon != 0d) {
+			currentLoc.setLatitude(lat);
+			currentLoc.setLongitude(lon);
+		}
+
+		user.setCurrent_location(currentLoc);
+		this.userDao.updateUser(user);
+		
+		/*	boolean save = true;
 		Location userCurLoc = user.getCurrent_location();
 		if (userCurLoc != null) {
 			if (userCurLoc.getLatitude() != null
@@ -203,7 +215,7 @@ public class UserServiceImpl implements UserService {
 				user.setCurrent_location(oldLocation);
 			}
 			this.userDao.updateUser(user);
-		}
+		}*/
 	}
 
 }

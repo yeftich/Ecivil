@@ -45,7 +45,7 @@ import com.ecivil.service.UserService;
 
 /**
  * @author Milan 18 мая 2014 г. - 0:34:19
- *
+ * 
  */
 @Controller
 @SessionAttributes("emergency")
@@ -104,8 +104,8 @@ public class EmergencyController {
 	// AJAX
 	// get emergency with all its actions
 	@RequestMapping(value = "/ajax/event/{eventId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<MapInfo> getEmergencyJSON(
-			@PathVariable("eventId") int eventId) {
+	public @ResponseBody
+	List<MapInfo> getEmergencyJSON(@PathVariable("eventId") int eventId) {
 		logger.debug("AJAX GET EMERGENCY with id " + eventId);
 
 		List<MapInfo> mapInfos = new ArrayList<MapInfo>();
@@ -115,17 +115,32 @@ public class EmergencyController {
 			String type = (emergency instanceof Accident ? "Accident"
 					: "Danger");
 
+			// used for sending JSON result
+
 			MapInfo mapinfo = new MapInfo(emergency.getId().toString(),
 					emergency.getLocation().getLatitude().toString(), emergency
-							.getLocation().getLongitude().toString(), type);
+							.getLocation().getLongitude().toString(), type,
+					emergency.getTextDescription(), emergency
+							.getCreatedDateTime().toString(
+									"dd/MM/yyyy HH:mm:ss"), emergency
+							.getOwner().getLogin(),
+					emergency.getCertification());
 			mapInfos.add(mapinfo);
 
 			Set<Action> actions = emergency.getActions();
 			for (Action action : actions) {
+				// if it is institution green marker else blue marker
+				String volType = (action.getOwner().getRole().isInstitution() ? "actionInstIcon"
+						: "actionVolIcon");
+
 				MapInfo mInfo = new MapInfo(action.getId().toString(), action
 						.getLocation().getLatitude().toString(), action
-						.getLocation().getLongitude().toString(), "actionVolIcon");
-				
+						.getLocation().getLongitude().toString(), 
+						volType);
+
+				mInfo.setDescription(action.getTextDescription());
+				mInfo.setOwner(action.getOwner().getLogin());
+				mInfo.setStarted(action.getCreatedDateTime().toString("dd/MM/yyyy HH:mm:ss"));
 				mapInfos.add(mInfo);
 			}
 
@@ -136,7 +151,8 @@ public class EmergencyController {
 
 	// AJAX
 	@RequestMapping(value = "/ajax/index", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<MapInfo> allEmergenciesJSON() {
+	public @ResponseBody
+	List<MapInfo> allEmergenciesJSON() {
 		logger.debug("AJAX GET ALL EMERGENCIES");
 		List<MapInfo> mapInfos = new ArrayList<MapInfo>();
 		List<Emergency> emergencies = this.emergencyService.getAllEmergencys();

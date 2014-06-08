@@ -19,5 +19,7 @@ public interface EventDao {
 
 	public void verifyEvent(int eventId)throws DataAccessException;
 
+	void deleteEvent(int eventId) throws DataAccessException;
+
 
 }

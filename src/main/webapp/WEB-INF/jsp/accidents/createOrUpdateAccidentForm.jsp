@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -17,7 +17,7 @@
 		<div class="container">
 			<jsp:include page="../fragments/navBar.jsp" />
 			<c:choose>
-				<c:when test="${accident['new']}">
+				<c:when test="${accidentIsNew}">
 					<c:set var="method" value="post" />
 				</c:when>
 				<c:otherwise>
@@ -26,7 +26,7 @@
 			</c:choose>
 
 			<h2>
-				<c:if test="${accident['new']}">New </c:if>
+				<c:if test="${accidentIsNew}">New </c:if>
 				Accident
 			</h2>
 
@@ -56,17 +56,28 @@
 				</div>
 
 				<div class="control-group">
-					<label class="control-label">Place </label>
+					<label class="control-label">Location latitude </label>
 
 					<div class="controls">
-						<form:input path="place" />
-						<span class="help-inline"><form:errors path="place" /></span>
+						<form:input path="location.latitude" />
+						<span class="help-inline"><form:errors
+								path="location.latitude" /></span>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label">Location longitude </label>
+
+					<div class="controls">
+						<form:input path="location.longitude" />
+						<span class="help-inline"><form:errors
+								path="location.longitude" /></span>
 					</div>
 				</div>
 
 				<div class="form-actions">
 					<c:choose>
-						<c:when test="${accident['new']}">
+						<c:when test="${accidentIsNew}">
 							<button type="submit">Add accident</button>
 						</c:when>
 						<c:otherwise>
