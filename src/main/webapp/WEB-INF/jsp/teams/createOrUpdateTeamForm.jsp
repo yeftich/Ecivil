@@ -12,50 +12,54 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
-			<c:choose>
-				<c:when test="${team['new']}">
-					<c:set var="method" value="post" />
-				</c:when>
-				<c:otherwise>
-					<c:set var="method" value="put" />
-				</c:otherwise>
-			</c:choose>
+	<div class="container-fluid">
 
-			<h2>
-				<c:if test="${team['new']}">New </c:if>
-				Team
-			</h2>
-			<form:form modelAttribute="team" method="${method}"
-				class="form-horizontal" id="add-team-form">
-				<ecivil:inputField label="Team Name" name="name" />
-				<div class="control-group">
-					<ecivil:selectField name="type" label="Type " names="${teamtypes}"	size="2" multiple="false"/>
-				</div>
-				<div class="control-group">
-					<ecivil:selectField name="admin" label="Administrator " names="${users}"	size="5" multiple="false"/>
-				</div>
-				<ecivil:inputField label="Address" name="address" />
-				<ecivil:inputField label="Email" name="email" />
-				<ecivil:inputField label="Telephone" name="telephone" />
-
-				<div class="form-actions">
-					<c:choose>
-						<c:when test="${team['new']}">
-							<button type="submit">Add team</button>
-						</c:when>
-						<c:otherwise>
-							<button type="submit">Update team</button>
-						</c:otherwise>
-					</c:choose>
-				</div>
-			</form:form>
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
-		<jsp:include page="../fragments/footer.jsp" />
+		<jsp:include page="../fragments/navBar.jsp" />
+
+		<c:choose>
+			<c:when test="${team['new']}">
+				<c:set var="method" value="post" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="method" value="put" />
+			</c:otherwise>
+		</c:choose>
+
+		<h3>
+			<c:if test="${team['new']}">New </c:if>
+			Team
+		</h3>
+		<form:form modelAttribute="team" method="${method}"
+			class="form-horizontal" id="add-team-form">
+			<ecivil:inputField label="Team Name" name="name" />
+			<div class="control-group">
+				<ecivil:selectField name="type" label="Type " names="${teamtypes}"
+					size="2" multiple="false" />
+			</div>
+			<div class="control-group">
+				<ecivil:selectField name="admin" label="Administrator "
+					names="${users}" size="5" multiple="false" />
+			</div>
+			<ecivil:inputField label="Address" name="address" />
+			<ecivil:inputField label="Email" name="email" />
+			<ecivil:inputField label="Telephone" name="telephone" />
+
+			<div class="form-actions">
+				<c:choose>
+					<c:when test="${team['new']}">
+						<button type="submit">Add team</button>
+					</c:when>
+					<c:otherwise>
+						<button type="submit">Update team</button>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</form:form>
 	</div>
+	<jsp:include page="../fragments/footer.jsp" />
 </body>
 
 </html>

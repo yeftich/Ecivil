@@ -15,77 +15,79 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
-			<h2>Dangers</h2>
+	<div class="container-fluid">
 
-			<a href='<spring:url value="/dangers/new" htmlEscape="true"/>'
-				class="btn btn-success">Add Danger</a> <br />
-
-			<c:choose>
-				<c:when test="${fn:length(itemList) > 0}">
-					<datatables:table id="dangers" data="${itemList}" cdn="true"
-						row="danger" theme="bootstrap2" cssClass="table table-striped"
-						paginate="false" info="false">
-
-						<datatables:column title="Description" cssStyle="width: 150px;"
-							display="html">
-							<spring:url value="/dangers/{dangerId}.html" var="dangerUrl">
-								<spring:param name="dangerId" value="${danger.id}" />
-							</spring:url>
-							<a href="${fn:escapeXml(dangerUrl)}"><c:out
-									value="${danger.textDescription}" /></a>
-						</datatables:column>
-
-						<datatables:column title="Type">
-							<c:out value="${danger.type}" />
-						</datatables:column>
-
-						<datatables:column title="Created by" display="html">
-							<spring:url value="/users/{userId}.html" var="ownerUrl">
-								<spring:param name="userId" value="${danger.owner.id}" />
-							</spring:url>
-							<a href="${fn:escapeXml(ownerUrl)}"> <c:out
-									value="${danger.owner.login}" /></a>
-						</datatables:column>
-
-						<datatables:column title="Created date">
-							<joda:format value="${danger.createdDateTime}"
-								pattern="dd/MM/yyyy HH:mm:ss" />
-						</datatables:column>
-
-						<datatables:column title="Place">
-							<c:out value="${danger.place}" />
-						</datatables:column>
-
-
-						<datatables:column display="html">
-							<security:authorize access="hasAnyRole('ROLE_ADMIN')">
-								<spring:url value="/events/{eventType}/{eventId}/delete.html"
-									var="dangerDeleteUrl">
-									<spring:param name="eventId" value="${danger.id}" />
-									<spring:param name="eventType" value="dangers" />
-								</spring:url>
-							<a href='${fn:escapeXml(dangerDeleteUrl)}'
-									class="btn btn-danger btn-mini">Delete Danger</a>
-							</security:authorize>
-						</datatables:column>
-
-
-					</datatables:table>
-
-				</c:when>
-
-				<c:otherwise>
-					<H4>No dangers found</H4>
-				</c:otherwise>
-			</c:choose>
-
-			<jsp:include page="../fragments/footer.jsp" />
-
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
+		<jsp:include page="../fragments/navBar.jsp" />
+
+		<h3>Dangers</h3>
+
+		<a href='<spring:url value="/dangers/new" htmlEscape="true"/>'
+			class="btn btn-success">Add Danger</a> <br />
+
+		<c:choose>
+			<c:when test="${fn:length(itemList) > 0}">
+				<datatables:table id="dangers" data="${itemList}" cdn="true"
+					row="danger" theme="bootstrap2" cssClass="table table-striped"
+					paginate="false" info="false">
+
+					<datatables:column title="Description" cssStyle="width: 150px;"
+						display="html">
+						<spring:url value="/dangers/{dangerId}.html" var="dangerUrl">
+							<spring:param name="dangerId" value="${danger.id}" />
+						</spring:url>
+						<a href="${fn:escapeXml(dangerUrl)}"><c:out
+								value="${danger.textDescription}" /></a>
+					</datatables:column>
+
+					<datatables:column title="Type">
+						<c:out value="${danger.type}" />
+					</datatables:column>
+
+					<datatables:column title="Created by" display="html">
+						<spring:url value="/users/{userId}.html" var="ownerUrl">
+							<spring:param name="userId" value="${danger.owner.id}" />
+						</spring:url>
+						<a href="${fn:escapeXml(ownerUrl)}"> <c:out
+								value="${danger.owner.login}" /></a>
+					</datatables:column>
+
+					<datatables:column title="Created date">
+						<joda:format value="${danger.createdDateTime}"
+							pattern="dd/MM/yyyy HH:mm:ss" />
+					</datatables:column>
+
+					<datatables:column title="Place">
+						<c:out value="${danger.place}" />
+					</datatables:column>
+
+
+					<datatables:column display="html">
+						<security:authorize access="hasAnyRole('ROLE_ADMIN')">
+							<spring:url value="/events/{eventType}/{eventId}/delete.html"
+								var="dangerDeleteUrl">
+								<spring:param name="eventId" value="${danger.id}" />
+								<spring:param name="eventType" value="dangers" />
+							</spring:url>
+							<a href='${fn:escapeXml(dangerDeleteUrl)}'
+								class="btn btn-danger btn-mini">Delete Danger</a>
+						</security:authorize>
+					</datatables:column>
+
+
+				</datatables:table>
+
+			</c:when>
+
+			<c:otherwise>
+				<H4>No dangers found</H4>
+			</c:otherwise>
+		</c:choose>
+
+		<jsp:include page="../fragments/footer.jsp" />
+
 	</div>
 </body>
 

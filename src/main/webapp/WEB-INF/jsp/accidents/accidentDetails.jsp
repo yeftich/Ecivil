@@ -11,46 +11,48 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
+	<div class="container-fluid">
 
-			<h2>Accident Information</h2>
-
-			<table class="table table-striped" style="width: 600px;">
-				<tr>
-					<th>Created date</th>
-					<td><b><joda:format value="${accident.createdDateTime}" pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
-				</tr>
-				<tr>
-					<th>Place</th>
-					<td><b><c:out value="${accident.place}" /></b></td>
-				</tr>
-				<tr>
-					<th>Description</th>
-					<td><c:out value="${accident.textDescription}" /></td>
-				</tr>
-				<tr>
-					<th>Created by user</th>
-					<td><c:out value="${accident.owner.login}" /></td>
-				</tr>
-				<tr>
-					<th>Type</th>
-					<td><c:out value="${accident.type}" /></td>
-				</tr>
-
-				<tr>
-					<td><spring:url value="{accidentId}/edit.html" var="editUrl">
-							<spring:param name="accidentId" value="${accident.id}" />
-						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
-							Accident</a></td>
-				</tr>
-			</table>
-
-			<jsp:include page="../fragments/footer.jsp" />
-
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
+		<jsp:include page="../fragments/navBar.jsp" />
+
+		<h3>Accident Information</h3>
+
+		<table class="table table-striped" style="width: 600px;">
+			<tr>
+				<th>Created date</th>
+				<td><b><joda:format value="${accident.createdDateTime}"
+							pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
+			</tr>
+			<tr>
+				<th>Place</th>
+				<td><b><c:out value="${accident.place}" /></b></td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td><c:out value="${accident.textDescription}" /></td>
+			</tr>
+			<tr>
+				<th>Created by user</th>
+				<td><c:out value="${accident.owner.login}" /></td>
+			</tr>
+			<tr>
+				<th>Type</th>
+				<td><c:out value="${accident.type}" /></td>
+			</tr>
+
+			<tr>
+				<td><spring:url value="{accidentId}/edit.html" var="editUrl">
+						<spring:param name="accidentId" value="${accident.id}" />
+					</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
+						Accident</a></td>
+			</tr>
+		</table>
+
+		<jsp:include page="../fragments/footer.jsp" />
+
 	</div>
 </body>
 

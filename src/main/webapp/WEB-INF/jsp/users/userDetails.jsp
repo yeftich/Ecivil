@@ -11,44 +11,47 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
+	<div class="container-fluid">
 
-			<h2>User Information</h2>
-
-			<table class="table table-striped" style="width: 600px;">
-				<tr>
-					<th>Name</th>
-					<td><b><c:out value="${user.firstName} ${user.lastName}" /></b></td>
-				</tr>
-				<tr>
-					<th>Address</th>
-					<td><c:out value="${user.address}" /></td>
-				</tr>
-				<tr>
-					<th>City</th>
-					<td><c:out value="${user.city}" /></td>
-				</tr>
-				<tr>
-					<th>Telephone</th>
-					<td><c:out value="${user.telephone}" /></td>
-				</tr>
-				<tr>
-					<th>Role</th>
-					<td><c:out value="${user.role.role}" /></td>
-				</tr>
-				<tr>
-					<td><spring:url value="{userId}/edit.html" var="editUrl">
-							<spring:param name="userId" value="${user.id}" />
-						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit User</a></td>
-				</tr>
-			</table>
-
-			<jsp:include page="../fragments/footer.jsp" />
-
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
+		<jsp:include page="../fragments/navBar.jsp" />
+
+
+		<h3>User Information</h3>
+
+		<table class="table table-striped" style="width: 600px;">
+			<tr>
+				<th>Name</th>
+				<td><b><c:out value="${user.firstName} ${user.lastName}" /></b></td>
+			</tr>
+			<tr>
+				<th>Address</th>
+				<td><c:out value="${user.address}" /></td>
+			</tr>
+			<tr>
+				<th>City</th>
+				<td><c:out value="${user.city}" /></td>
+			</tr>
+			<tr>
+				<th>Telephone</th>
+				<td><c:out value="${user.telephone}" /></td>
+			</tr>
+			<tr>
+				<th>Role</th>
+				<td><c:out value="${user.role.role}" /></td>
+			</tr>
+			<tr>
+				<td><spring:url value="{userId}/edit.html" var="editUrl">
+						<spring:param name="userId" value="${user.id}" />
+					</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
+						User</a></td>
+			</tr>
+		</table>
+
+		<jsp:include page="../fragments/footer.jsp" />
+
 	</div>
 </body>
 

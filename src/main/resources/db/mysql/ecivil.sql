@@ -20,6 +20,11 @@ SET time_zone = "+00:00";
 -- Database: `ecivil`
 --
 
+CREATE DATABASE IF NOT EXISTS ecivil;
+GRANT ALL PRIVILEGES ON ecivil.* TO pc@localhost IDENTIFIED BY 'pc';
+
+USE ecivil;
+
 -- --------------------------------------------------------
 
 --

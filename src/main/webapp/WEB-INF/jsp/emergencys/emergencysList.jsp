@@ -57,10 +57,10 @@
 			/* 			var event_info = $(this).attr('id').split("-");
 			 var event_id = null;
 			 *//* 							var event_lat = null;
-																																				 var event_lon = null; */
+																																							 var event_lon = null; */
 			/* 		event_id = event_info[0].replace('eventId', '');
 			 *//* 							event_lat = event_info[1].replace('lat', '');
-																																					 event_lon = event_info[2].replace('lon', ''); */
+																																								 event_lon = event_info[2].replace('lon', ''); */
 
 		});
 	});
@@ -271,18 +271,18 @@
 </script>
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
+	<div class="container-fluid">
 
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
+		</div>
+		<jsp:include page="../fragments/navBar.jsp" />
 
+		<h3 id="em-header-many">Emergencies</h3>
 
-			<h3 id="em-header-many">Emergencies</h3>
+		<h3 id="em-header-one">Emergency</h3>
 
-			<h3 id="em-header-one">Emergency</h3>
-
-			<!-- 			<div class="panel panel-primary">
+		<!-- 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Panel title</h3>
 				</div>
@@ -290,50 +290,48 @@
 			</div>
 			 -->
 
+		<div class="row">
+			<!-- span numbers must add up to 12 -->
+			<div class="span6">
+				<div id="map-canvas"></div>
+			</div>
+			<div class="span4">
+				<div id="event-info-panel">
 
-
-			<div class="row">
-				<!-- span numbers must add up to 12 -->
-				<div class="span6">
-					<div id="map-canvas"></div>
-				</div>
-				<div class="span4">
-					<div id="event-info-panel">
-
-						<div class="row">
-							<div class="span4">
-								<table id="event-info-table" class="table">
-								</table>
-							</div>
+					<div class="row">
+						<div class="span4">
+							<table id="event-info-table" class="table">
+							</table>
 						</div>
+					</div>
 
-						<div class="row">
-							<div class="span4">
-								<div id="event-info-commands">
-									<div class="btn-group">
+					<div class="row">
+						<div class="span4">
+							<div id="event-info-commands">
+								<div class="btn-group">
 
-										<a id="show-all-button" href='#' class="btn btn-mini">Show
-											all</a>
+									<a id="show-all-button" href='#' class="btn btn-mini">Show
+										all</a>
 
-									</div>
 								</div>
 							</div>
 						</div>
-
-						<div class="row">
-							<div class="span4">
-								<table id="actions-info-table" class="table table-condensed">
-								</table>
-							</div>
-						</div>
-
 					</div>
-				</div>
-				<div class="span2">
-					<div id="admin-info-messages"></div>
+
+					<div class="row">
+						<div class="span4">
+							<table id="actions-info-table" class="table table-condensed">
+							</table>
+						</div>
+					</div>
+
 				</div>
 			</div>
-			<%-- 						
+			<div class="span2">
+				<div id="admin-info-messages"></div>
+			</div>
+		</div>
+		<%-- 						
  --%>
 
 
@@ -343,96 +341,96 @@
 
 
 
-			<c:choose>
-				<c:when test="${fn:length(itemList) > 0}">
+		<c:choose>
+			<c:when test="${fn:length(itemList) > 0}">
 
-					<datatables:table id="emergencys" data="${itemList}" cdn="true"
-						row="emergency" theme="bootstrap2" cssClass="table table-striped"
-						paginate="false" info="false" sort="false">
+				<datatables:table id="emergencys" data="${itemList}" cdn="true"
+					row="emergency" theme="bootstrap2" cssClass="table table-striped"
+					paginate="false" info="false" sort="false">
 
-						<datatables:column title="Created date" format="{0,dd/MM/yyyy HH:mm:ss}" sortType="natural"
-							sortInit="desc">
-							<joda:format value="${emergency.createdDateTime}"
-								pattern="dd/MM/yyyy HH:mm:ss" />
-						</datatables:column>
+					<datatables:column title="Created date"
+						format="{0,dd/MM/yyyy HH:mm:ss}" sortType="natural"
+						sortInit="desc">
+						<joda:format value="${emergency.createdDateTime}"
+							pattern="dd/MM/yyyy HH:mm:ss" />
+					</datatables:column>
 
-						<datatables:column title="Description" cssStyle="width: 150px;">
-							<c:out value="${emergency.textDescription}" />
-						</datatables:column>
+					<datatables:column title="Description" cssStyle="width: 150px;">
+						<c:out value="${emergency.textDescription}" />
+					</datatables:column>
 
-						<datatables:column title="Type">
-							<c:out value="${emergency.type}" />
-						</datatables:column>
+					<datatables:column title="Type">
+						<c:out value="${emergency.type}" />
+					</datatables:column>
 
-						<datatables:column title="Created by" display="html">
-							<spring:url value="/users/{userId}.html" var="ownerUrl">
-								<spring:param name="userId" value="${emergency.owner.id}" />
-							</spring:url>
-							<a href="${fn:escapeXml(ownerUrl)}"> <c:out
-									value="${emergency.owner.login}" /></a>
-						</datatables:column>
-
-						<spring:url value="/emergencys/{emergencyId}/action/new"
-							var="newActionUrl">
-							<spring:param name="emergencyId" value="${emergency.id}" />
+					<datatables:column title="Created by" display="html">
+						<spring:url value="/users/{userId}.html" var="ownerUrl">
+							<spring:param name="userId" value="${emergency.owner.id}" />
 						</spring:url>
-						<spring:url value="/emergencys/{emergencyId}/close"
-							var="closeEmergencyUrl">
-							<spring:param name="emergencyId" value="${emergency.id}" />
-						</spring:url>
-						<spring:url value="/emergencys/{emergencyId}/verify"
-							var="verifyEmergencyUrl">
-							<spring:param name="emergencyId" value="${emergency.id}" />
-						</spring:url>
-						<spring:url value="/emergencys/{emergencyId}/edit"
-							var="editEmergencyUrl">
-							<spring:param name="emergencyId" value="${emergency.id}" />
-						</spring:url>
+						<a href="${fn:escapeXml(ownerUrl)}"> <c:out
+								value="${emergency.owner.login}" /></a>
+					</datatables:column>
+
+					<spring:url value="/emergencys/{emergencyId}/action/new"
+						var="newActionUrl">
+						<spring:param name="emergencyId" value="${emergency.id}" />
+					</spring:url>
+					<spring:url value="/emergencys/{emergencyId}/close"
+						var="closeEmergencyUrl">
+						<spring:param name="emergencyId" value="${emergency.id}" />
+					</spring:url>
+					<spring:url value="/emergencys/{emergencyId}/verify"
+						var="verifyEmergencyUrl">
+						<spring:param name="emergencyId" value="${emergency.id}" />
+					</spring:url>
+					<spring:url value="/emergencys/{emergencyId}/edit"
+						var="editEmergencyUrl">
+						<spring:param name="emergencyId" value="${emergency.id}" />
+					</spring:url>
 
 
-						<datatables:column display="html">
-							<div class="button-group">
-								<c:choose>
-									<c:when test="${emergency.owner.login == userLogin}">
-										<a href="${fn:escapeXml(editEmergencyUrl)}"
-											class="btn btn-mini">Edit</a>
+					<datatables:column display="html">
+						<div class="button-group">
+							<c:choose>
+								<c:when test="${emergency.owner.login == userLogin}">
+									<a href="${fn:escapeXml(editEmergencyUrl)}"
+										class="btn btn-mini">Edit</a>
+
+									<a href="${fn:escapeXml(closeEmergencyUrl)}"
+										class="btn btn-mini">Close</a>
+								</c:when>
+								<c:otherwise>
+									<security:authorize
+										access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
+										<a href="${fn:escapeXml(newActionUrl)}" class="btn btn-mini">Participate</a>
+
+										<a href="${fn:escapeXml(verifyEmergencyUrl)}"
+											class="btn btn-mini">Verify</a>
 
 										<a href="${fn:escapeXml(closeEmergencyUrl)}"
 											class="btn btn-mini">Close</a>
-									</c:when>
-									<c:otherwise>
-										<security:authorize
-											access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
-											<a href="${fn:escapeXml(newActionUrl)}" class="btn btn-mini">Participate</a>
-
-											<a href="${fn:escapeXml(verifyEmergencyUrl)}"
-												class="btn btn-mini">Verify</a>
-
-											<a href="${fn:escapeXml(closeEmergencyUrl)}"
-												class="btn btn-mini">Close</a>
-										</security:authorize>
-									</c:otherwise>
-								</c:choose>
-									<a class="btn btn-mini map-link" id="eventId${emergency.id}" href='#'><i
-								class="icon-map-marker"></i></a>
-							</div>
-						
+									</security:authorize>
+								</c:otherwise>
+							</c:choose>
+							<a class="btn btn-mini map-link" id="eventId${emergency.id}"
+								href='#'><i class="icon-map-marker"></i></a>
+						</div>
 
 
-						</datatables:column>
 
-					</datatables:table>
+					</datatables:column>
 
-				</c:when>
+				</datatables:table>
 
-				<c:otherwise>
-					<H4>No emergencies found</H4>
-				</c:otherwise>
-			</c:choose>
+			</c:when>
 
-			<jsp:include page="../fragments/footer.jsp" />
+			<c:otherwise>
+				<H4>No emergencies found</H4>
+			</c:otherwise>
+		</c:choose>
 
-		</div>
+		<jsp:include page="../fragments/footer.jsp" />
+
 	</div>
 </body>
 

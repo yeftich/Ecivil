@@ -11,52 +11,54 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
+	<div class="container-fluid">
 
-			<h2>Action Information</h2>
-
-			<table class="table table-striped" style="width: 600px;">
-				<tr>
-					<th>Created date</th>
-					<td><b><joda:format value="${action.createdDateTime}"
-								pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
-				</tr>
-				<tr>
-					<th>Place</th>
-					<td><b><c:out value="${action.place}" /></b></td>
-				</tr>
-				<tr>
-					<th>Tool</th>
-					<td><c:out value="${action.tool}" /></td>
-				</tr>
-				<tr>
-					<th>Description</th>
-					<td><c:out value="${action.textDescription}" /></td>
-				</tr>
-				<tr>
-					<th>Created by user</th>
-					<td><c:out value="${action.owner.login}" /></td>
-				</tr>
-				<tr>
-					<th>Related to emergency</th>
-					<td><c:out value="${action.emergency.textDescription}" /></td>
-				</tr>
-
-
-				<tr>
-					<td><spring:url value="{actionId}/edit.html" var="editUrl">
-							<spring:param name="actionId" value="${action.id}" />
-						</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
-							Action</a></td>
-				</tr>
-			</table>
-
-			<jsp:include page="../fragments/footer.jsp" />
-
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
+		<jsp:include page="../fragments/navBar.jsp" />
+
+
+		<h3>Action Information</h3>
+
+		<table class="table table-striped" style="width: 600px;">
+			<tr>
+				<th>Created date</th>
+				<td><b><joda:format value="${action.createdDateTime}"
+							pattern="dd/MM/yyyy HH:mm:ss" /></b></td>
+			</tr>
+			<tr>
+				<th>Place</th>
+				<td><b><c:out value="${action.place}" /></b></td>
+			</tr>
+			<tr>
+				<th>Tool</th>
+				<td><c:out value="${action.tool}" /></td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td><c:out value="${action.textDescription}" /></td>
+			</tr>
+			<tr>
+				<th>Created by user</th>
+				<td><c:out value="${action.owner.login}" /></td>
+			</tr>
+			<tr>
+				<th>Related to emergency</th>
+				<td><c:out value="${action.emergency.textDescription}" /></td>
+			</tr>
+
+
+			<tr>
+				<td><spring:url value="{actionId}/edit.html" var="editUrl">
+						<spring:param name="actionId" value="${action.id}" />
+					</spring:url> <a href="${fn:escapeXml(editUrl)}" class="btn btn-info">Edit
+						Action</a></td>
+			</tr>
+		</table>
+
+		<jsp:include page="../fragments/footer.jsp" />
+
 	</div>
 </body>
 

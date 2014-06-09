@@ -12,84 +12,86 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
-			<c:choose>
-				<c:when test="${accidentIsNew}">
-					<c:set var="method" value="post" />
-				</c:when>
-				<c:otherwise>
-					<c:set var="method" value="put" />
-				</c:otherwise>
-			</c:choose>
+	<div class="container-fluid">
 
-			<h2>
-				<c:if test="${accidentIsNew}">New </c:if>
-				Accident
-			</h2>
-
-			<form:form modelAttribute="accident" method="${method}"
-				class="form-horizontal" id="add-accident-form">
-
-				<div class="control-group">
-					<label class="control-label">Description </label>
-
-					<div class="controls">
-						<form:textarea path="textDescription" rows="5" cols="30" />
-						<span class="help-inline"><form:errors
-								path="textDescription" /></span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label">Type </label>
-
-					<div class="controls">
-						<form:select path="type">
-							<form:option value="${defaultType}" label="${defaultType}" />
-							<form:options items="${accidentTypes}" />
-						</form:select>
-						<span class="help-inline"><form:errors path="type" /></span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label">Location latitude </label>
-
-					<div class="controls">
-						<form:input path="location.latitude" />
-						<span class="help-inline"><form:errors
-								path="location.latitude" /></span>
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label">Location longitude </label>
-
-					<div class="controls">
-						<form:input path="location.longitude" />
-						<span class="help-inline"><form:errors
-								path="location.longitude" /></span>
-					</div>
-				</div>
-
-				<div class="form-actions">
-					<c:choose>
-						<c:when test="${accidentIsNew}">
-							<button type="submit">Add accident</button>
-						</c:when>
-						<c:otherwise>
-							<button type="submit">Update accident</button>
-						</c:otherwise>
-					</c:choose>
-				</div>
-			</form:form>
-
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
-		<jsp:include page="../fragments/footer.jsp" />
+		<jsp:include page="../fragments/navBar.jsp" />
+
+		<c:choose>
+			<c:when test="${accidentIsNew}">
+				<c:set var="method" value="post" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="method" value="put" />
+			</c:otherwise>
+		</c:choose>
+
+		<h3>
+			<c:if test="${accidentIsNew}">New </c:if>
+			Accident
+		</h3>
+
+		<form:form modelAttribute="accident" method="${method}"
+			class="form-horizontal" id="add-accident-form">
+
+			<div class="control-group">
+				<label class="control-label">Description </label>
+
+				<div class="controls">
+					<form:textarea path="textDescription" rows="5" cols="30" />
+					<span class="help-inline"><form:errors
+							path="textDescription" /></span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Type </label>
+
+				<div class="controls">
+					<form:select path="type">
+						<form:option value="${defaultType}" label="${defaultType}" />
+						<form:options items="${accidentTypes}" />
+					</form:select>
+					<span class="help-inline"><form:errors path="type" /></span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Location latitude </label>
+
+				<div class="controls">
+					<form:input path="location.latitude" />
+					<span class="help-inline"><form:errors
+							path="location.latitude" /></span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Location longitude </label>
+
+				<div class="controls">
+					<form:input path="location.longitude" />
+					<span class="help-inline"><form:errors
+							path="location.longitude" /></span>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<c:choose>
+					<c:when test="${accidentIsNew}">
+						<button type="submit">Add accident</button>
+					</c:when>
+					<c:otherwise>
+						<button type="submit">Update accident</button>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</form:form>
+
 	</div>
+	<jsp:include page="../fragments/footer.jsp" />
 </body>
 
 </html>

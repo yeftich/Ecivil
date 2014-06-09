@@ -10,34 +10,36 @@
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="../fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="../fragments/navBar.jsp" />
+	<div class="container-fluid">
 
-			<h2>Find Teams</h2>
-
-			<a href='<spring:url value="/teams/new" htmlEscape="true"/>'
-				class="btn btn-success">Add Team</a> <br />
-
-			<spring:url value="/teams.html" var="formUrl" />
-			<form:form modelAttribute="team" action="${fn:escapeXml(formUrl)}"
-				method="get" class="form-horizontal" id="search-team-form">
-				<fieldset>
-					<div class="control-group" id="name">
-						<label class="control-label">Team name </label>
-						<form:input path="name" size="30" maxlength="80" />
-						<span class="help-inline"><form:errors path="*" /></span>
-					</div>
-					<div class="form-actions">
-						<button type="submit">Find team</button>
-					</div>
-				</fieldset>
-			</form:form>
-
-			<jsp:include page="../fragments/footer.jsp" />
-
+		<div class="masthead">
+			<jsp:include page="../fragments/header.jsp" />
 		</div>
+		<jsp:include page="../fragments/navBar.jsp" />
+
+
+		<h3>Find Teams</h3>
+
+		<a href='<spring:url value="/teams/new" htmlEscape="true"/>'
+			class="btn btn-success">Add Team</a> <br />
+
+		<spring:url value="/teams.html" var="formUrl" />
+		<form:form modelAttribute="team" action="${fn:escapeXml(formUrl)}"
+			method="get" class="form-horizontal" id="search-team-form">
+			<fieldset>
+				<div class="control-group" id="name">
+					<label class="control-label">Team name </label>
+					<form:input path="name" size="30" maxlength="80" />
+					<span class="help-inline"><form:errors path="*" /></span>
+				</div>
+				<div class="form-actions">
+					<button type="submit">Find team</button>
+				</div>
+			</fieldset>
+		</form:form>
+
+		<jsp:include page="../fragments/footer.jsp" />
+
 	</div>
 </body>
 

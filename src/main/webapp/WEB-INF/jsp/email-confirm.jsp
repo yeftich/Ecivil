@@ -9,16 +9,18 @@
 <jsp:include page="fragments/headTag.jsp" />
 </head>
 <body>
-	<div id="main">
-		<jsp:include page="fragments/header.jsp" />
-		<div class="container">
-			<jsp:include page="fragments/navBar.jsp" />
-			<h1>Email confirmation page</h1>
-			<p>
-				${message} <br /> <a
-					href="${pageContext.request.contextPath}/index.html">Home page</a><br />
-			</p>
+	<div class="container-fluid">
+
+		<div class="masthead">
+			<jsp:include page="fragments/header.jsp" />
 		</div>
+		<jsp:include page="fragments/navBar.jsp" />
+
+		<h3>Email confirmation page</h3>
+		<p>
+			${message} <br /> <a
+				href="${pageContext.request.contextPath}/index.html">Home page</a><br />
+		</p>
 	</div>
 </body>
 </html>
