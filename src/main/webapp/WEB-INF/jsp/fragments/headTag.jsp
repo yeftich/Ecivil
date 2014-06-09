@@ -7,13 +7,17 @@ ecivil :: a civil protection web application
 
 <head>
 <!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> -->
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 <meta charset="utf-8">
 <title>E-Civil</title>
 
 <spring:url value="/webjars/bootstrap/2.3.0/css/bootstrap.min.css"
 	var="bootstrapCss" />
 <link href="${bootstrapCss}" rel="stylesheet" />
+
+<spring:url value="/webjars/bootstrap/2.3.0/css/bootstrap-responsive.min.css"
+	var="bootstrapResponsiveCss" />
+	<link href="${bootstrapResponsiveCss}" rel="stylesheet" />
 
 <spring:url value="/resources/css/ecivil.css" var="ecivilCss" />
 <link href="${ecivilCss}" rel="stylesheet" />

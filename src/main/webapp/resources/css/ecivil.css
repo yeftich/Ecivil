@@ -105,6 +105,26 @@ body {
 
 /* new version css */
 
+/* Large desktop / Laptop */ 
+@media screen and (max-width: 960px) { 
+/* your styles for these devices */ 
+}
+
+/* ablet landscape and desktop */ 
+@media screen and (max-width: 800px) { 
+/* your styles for these devices */ 
+} 
+
+/* Landscape phone to portrait tablet */ 
+@media screen and (max-width: 640px) { 
+/* your styles for these devices */  
+} 
+
+/* Landscape phones and smaller */ 
+@media screen and (max-width: 480px) { 
+/* your styles for these devices */  
+}
+
 /* set a max-width for horizontal fluid layout and make it centered */
 .container-fluid {
 	margin-right: auto;

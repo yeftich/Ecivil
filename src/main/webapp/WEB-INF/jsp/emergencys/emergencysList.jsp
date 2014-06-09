@@ -290,7 +290,7 @@
 			</div>
 			 -->
 
-		<div class="row">
+		<div class="row-fluid">
 			<!-- span numbers must add up to 12 -->
 			<div class="span6">
 				<div id="map-canvas"></div>
@@ -299,14 +299,14 @@
 				<div id="event-info-panel">
 
 					<div class="row">
-						<div class="span4">
+						<div class="span12">
 							<table id="event-info-table" class="table">
 							</table>
 						</div>
 					</div>
 
 					<div class="row">
-						<div class="span4">
+						<div class="span12">
 							<div id="event-info-commands">
 								<div class="btn-group">
 
@@ -319,7 +319,7 @@
 					</div>
 
 					<div class="row">
-						<div class="span4">
+						<div class="span12">
 							<table id="actions-info-table" class="table table-condensed">
 							</table>
 						</div>
