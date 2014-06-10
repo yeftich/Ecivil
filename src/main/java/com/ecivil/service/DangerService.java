@@ -18,7 +18,7 @@ public interface DangerService {
 
 	Danger findDangerById(int dangerId) throws DataAccessException;
 
-	void saveDanger(Danger danger) throws DataAccessException;
+	Danger saveDanger(Danger danger) throws DataAccessException;
 
 	public void deleteDanger(int dangerId)  throws DataAccessException;
 

@@ -70,12 +70,12 @@ public class AccidentController {
 		User owner = userService.getLoggedInUser();
 		logger.debug("LOGGED IN USER IS " + owner.getLastName()
 				+ " and his location is " + owner.getCurrent_location());
+		Location loc = new Location();
 		if (owner.hasValidLocation()) {
-			Location loc = new Location();
 			loc.setLatitude(owner.getCurrent_location().getLatitude());
 			loc.setLongitude(owner.getCurrent_location().getLongitude());
-			accident.setLocation(loc);
 		}
+		accident.setLocation(loc);
 		accident.setOwner(owner);
 		accident.setType(EAccidentType.defaultInGreek());
 		Accident savedAccident = this.accidentService.saveAccident(accident);
@@ -115,6 +115,7 @@ public class AccidentController {
 			@PathVariable("accidentId") int accidentId, Model model) {
 		Accident accident = this.accidentService.findAccidentById(accidentId);
 		model.addAttribute("accident", accident);
+		model.addAttribute("accidentIsNew", new Boolean(true));
 		return "accidents/createOrUpdateAccidentForm";
 	}
 

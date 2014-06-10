@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import net.wimpi.telnetd.io.terminal.ansi;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import com.ecivil.service.DangerService;
 import com.ecivil.service.EmergencyService;
 import com.ecivil.service.EventService;
 import com.ecivil.service.UserService;
+import com.ecivil.util.DateTimeFormatBuilder;
 
 /**
  * @author Milan 18 мая 2014 г. - 0:34:19
@@ -57,6 +59,7 @@ public class EmergencyController {
 	private final EventService eventService;
 	private final EmergencyService emergencyService;
 	private final AccidentService accidentService;
+	private DateTimeFormatBuilder dateTimeFormatBuilder;
 
 	@Autowired
 	public EmergencyController(EmergencyService emergencyService,
@@ -66,6 +69,7 @@ public class EmergencyController {
 		this.dangerService = dangerService;
 		this.eventService = eventService;
 		this.accidentService = accidentService;
+		this.dateTimeFormatBuilder = new DateTimeFormatBuilder();
 	}
 
 	@InitBinder
@@ -110,20 +114,28 @@ public class EmergencyController {
 
 		List<MapInfo> mapInfos = new ArrayList<MapInfo>();
 		Emergency emergency = this.emergencyService.findEmergencyById(eventId);
+
 		if (emergency != null) {
+			DateTime emStartTime = emergency.getCreatedDateTime();
 			logger.debug("EMERGENCY: " + emergency.getTextDescription());
 			String type = (emergency instanceof Accident ? "Accident"
 					: "Danger");
 
 			// used for sending JSON result
-
+			String latitude = "0";
+			String longitude = "0";
+			DateTime now = new DateTime();
+			Period emDuration = new Period(emStartTime, now);
+			String started = this.dateTimeFormatBuilder
+					.periodToString(emDuration);
+			logger.debug("Emergency started " + started);
+			if (emergency.hasValidLocation()) {
+				latitude = emergency.getLocation().getLatitude().toString();
+				longitude = emergency.getLocation().getLongitude().toString();
+			}
 			MapInfo mapinfo = new MapInfo(emergency.getId().toString(),
-					emergency.getLocation().getLatitude().toString(), emergency
-							.getLocation().getLongitude().toString(), type,
-					emergency.getTextDescription(), emergency
-							.getCreatedDateTime().toString(
-									"dd/MM/yyyy HH:mm:ss"), emergency
-							.getOwner().getLogin(),
+					latitude, longitude, type, emergency.getTextDescription(),
+					started, emergency.getOwner().getLogin(),
 					emergency.getCertification());
 			mapInfos.add(mapinfo);
 
@@ -134,13 +146,20 @@ public class EmergencyController {
 						: "actionVolIcon");
 
 				MapInfo mInfo = new MapInfo(action.getId().toString(), action
-						.getLocation().getLatitude().toString(), action
-						.getLocation().getLongitude().toString(), 
-						volType);
-
+						.getOwner().getCurrent_location().getLatitude()
+						.toString(), action.getOwner().getCurrent_location()
+						.getLongitude().toString(), volType);
+				logger.debug("owners location: latlon --> "
+						+ action.getOwner().getCurrent_location().getLatitude()
+								.toString()
+						+ ","
+						+ action.getOwner().getCurrent_location()
+								.getLongitude().toString());
 				mInfo.setDescription(action.getTextDescription());
 				mInfo.setOwner(action.getOwner().getLogin());
-				mInfo.setStarted(action.getCreatedDateTime().toString("dd/MM/yyyy HH:mm:ss"));
+				Period actPeriod = new Period(action.getCreatedDateTime(), now);
+				mInfo.setStarted(this.dateTimeFormatBuilder
+						.periodToString(actPeriod));
 				mapInfos.add(mInfo);
 			}
 

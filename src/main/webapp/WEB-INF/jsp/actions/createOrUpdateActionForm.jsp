@@ -45,16 +45,7 @@
 							path="textDescription" /></span>
 				</div>
 			</div>
-
-			<div class="control-group">
-				<label class="control-label">Place </label>
-
-				<div class="controls">
-					<form:input path="place" />
-					<span class="help-inline"><form:errors path="place" /></span>
-				</div>
-			</div>
-
+			
 			<div class="control-group">
 				<label class="control-label">Tool </label>
 

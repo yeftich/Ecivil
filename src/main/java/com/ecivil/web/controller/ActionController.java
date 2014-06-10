@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ecivil.model.Location;
 import com.ecivil.model.event.Action;
 import com.ecivil.model.event.Action;
 import com.ecivil.model.event.Emergency;
@@ -59,6 +60,13 @@ public class ActionController {
 		logger.debug("initCreationActionForm for new action");
 
 		Action action = new Action();
+		User owner = this.userService.getLoggedInUser();
+		action.setOwner(owner);
+		action.setLocation(new Location());
+		if(owner.hasValidLocation()) {
+			action.getLocation().setLatitude(owner.getCurrent_location().getLatitude());
+			action.getLocation().setLongitude(owner.getCurrent_location().getLongitude());
+		}
 		model.put("action", action);
 		return "actions/createOrUpdateActionForm";
 	}
@@ -71,8 +79,6 @@ public class ActionController {
 		if (result.hasErrors()) {
 			return "actions/createOrUpdateActionForm";
 		} else {
-			User owner = this.userService.getLoggedInUser();
-			action.setOwner(owner);
 			Emergency emergency = this.emergencyService.findEmergencyById(emergencyId);
 			action.setEmergency(emergency);
 			this.actionService.saveAction(action);

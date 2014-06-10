@@ -25,8 +25,8 @@ public class DangerServiceImpl implements DangerService{
 
 	@Override
 	@Transactional
-	public void saveDanger(Danger danger) throws DataAccessException {
-		dangerDao.saveDanger(danger);
+	public Danger saveDanger(Danger danger) throws DataAccessException {
+		return dangerDao.saveDanger(danger);
 	}
 
 	@Override

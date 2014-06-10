@@ -20,9 +20,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ecivil.model.enums.EAccidentType;
+import com.ecivil.model.Location;
 import com.ecivil.model.enums.EDangerType;
-import com.ecivil.model.event.Danger;
 import com.ecivil.model.event.Danger;
 import com.ecivil.model.user.User;
 import com.ecivil.service.DangerService;
@@ -67,9 +66,24 @@ public class DangerController {
 	@RequestMapping(value = "/dangers/new", method = RequestMethod.GET)
 	public String initCreationDangerForm(Map<String, Object> model) {
 		logger.debug("initCreationDangerForm for new danger");
-
 		Danger danger = new Danger();
-		model.put("danger", danger);
+		User owner = userService.getLoggedInUser();
+		logger.debug("LOGGED IN USER IS " + owner.getLastName()
+				+ " and his location is " + owner.getCurrent_location());
+		Location loc = new Location();
+		if (owner.hasValidLocation()) {
+			loc.setLatitude(owner.getCurrent_location().getLatitude());
+			loc.setLongitude(owner.getCurrent_location().getLongitude());
+		}
+		danger.setLocation(loc);
+		danger.setOwner(owner);
+		danger.setType(EDangerType.defaultInGreek());
+		Danger savedDanger = this.dangerService.saveDanger(danger);
+		model.put("danger", savedDanger);
+		model.put("dangerIsNew", new Boolean(true));
+		logger.debug("NEW ACCIDENT SAVED with id " + savedDanger.getId()
+				+ " Created by " + owner.getLastName()
+				+ " and his location is " + owner.getCurrent_location());
 		return "dangers/createOrUpdateDangerForm";
 	}
 	
@@ -81,8 +95,6 @@ public class DangerController {
 		if (result.hasErrors()) {
 			return "dangers/createOrUpdateDangerForm";
 		} else {
-			User owner = userService.getLoggedInUser();
-			danger.setOwner(owner);
 			this.dangerService.saveDanger(danger);
 			status.setComplete();
 			return "redirect:/dangers/" + danger.getId();
@@ -101,6 +113,7 @@ public class DangerController {
 			Model model) {
 		Danger danger = this.dangerService.findDangerById(dangerId);
 		model.addAttribute("danger", danger);
+		model.addAttribute("dangerIsNew", new Boolean(false));
 		return "dangers/createOrUpdateDangerForm";
 	}
 

@@ -32,12 +32,18 @@ public class DangerDaoImpl implements DangerDao {
 	}
 
 	@Override
-	public void saveDanger(Danger danger) throws DataAccessException {
+	public Danger saveDanger(Danger danger) throws DataAccessException {
+		Danger savedDanger = this.em.merge(danger);
 		if (danger.isNew()) {
+			this.em.flush();
+		}
+		return savedDanger;
+		
+		/*if (danger.isNew()) {
 			this.em.persist(danger);
 		} else {
 			this.em.merge(danger);
-		}
+		}*/
 	}
 
 	@Override

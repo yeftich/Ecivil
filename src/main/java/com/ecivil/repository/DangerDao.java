@@ -16,7 +16,7 @@ public interface DangerDao {
 
 	public List<Danger> getAllDangers() throws DataAccessException;
 
-	public void saveDanger(Danger danger) throws DataAccessException;
+	public Danger saveDanger(Danger danger) throws DataAccessException;
 
 	public Danger findDangerById(int dangerId) throws DataAccessException;
 
