@@ -1,10 +1,18 @@
-﻿<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/security/tags"
 	prefix="security"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
 <div id="header">
+
+	<div id="logo">
+		<spring:url value="/resources/images/ecivil_logo.gif" var="ecivilLogo" />
+		<a href="<spring:url value="/" htmlEscape="true" />"> <img
+			width="100%" src="${ecivilLogo}" id="logo" alt="E Civil Logo" />
+		</a>
+	</div>
+
 	<div id="widgetBar">
 		<!--signIn widget-->
 		<security:authorize access="isAnonymous()">
@@ -16,8 +24,8 @@
 
 		<security:authorize access="isAuthenticated()">
 			<div class="headerWidget">
-				Welcome
-					<span 	id="loggedUser" ><security:authentication property="principal.Username" /></span>
+				Welcome <span id="loggedUser"><security:authentication
+						property="principal.Username" /></span>
 			</div>
 		</security:authorize>
 
@@ -39,10 +47,7 @@
 		</security:authorize>
 	</div>
 
-	<spring:url value="/resources/images/ecivil_logo.gif" var="ecivilLogo" />
-	<a href="<spring:url value="/" htmlEscape="true" />"> <img
-		src="${ecivilLogo}" id="logo" alt="E Civil Logo" />
-	</a>
+
 
 
 	<h1 id="logoText">
