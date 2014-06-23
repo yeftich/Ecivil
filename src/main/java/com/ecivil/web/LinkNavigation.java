@@ -43,8 +43,9 @@ public class LinkNavigation {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView homePage(Principal principal) {
-		ModelAndView modelAndView = new ModelAndView(
+/*		ModelAndView modelAndView = new ModelAndView(
 				"redirect:/index");
+*/		ModelAndView modelAndView = new ModelAndView("success-login");
 /*		if (principal != null && principal.getName() != null) {
 			modelAndView.addObject("userLogin", principal.getName());
 		} else {

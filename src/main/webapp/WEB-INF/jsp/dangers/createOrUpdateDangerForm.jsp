@@ -20,7 +20,7 @@
 		<jsp:include page="../fragments/navBar.jsp" />
 
 		<c:choose>
-			<c:when test="${danger['new']}">
+			<c:when test="${dangerIsNew}">
 				<c:set var="method" value="post" />
 			</c:when>
 			<c:otherwise>
@@ -29,7 +29,7 @@
 		</c:choose>
 
 		<h3>
-			<c:if test="${danger['new']}">New </c:if>
+			<c:if test="${dangerIsNew}">New </c:if>
 			Danger
 		</h3>
 
@@ -59,17 +59,28 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label">Place </label>
+				<label class="control-label">Location latitude </label>
 
 				<div class="controls">
-					<form:input path="place" />
-					<span class="help-inline"><form:errors path="place" /></span>
+					<form:input path="location.latitude" />
+					<span class="help-inline"><form:errors
+							path="location.latitude" /></span>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label">Location longitude </label>
+
+				<div class="controls">
+					<form:input path="location.longitude" />
+					<span class="help-inline"><form:errors
+							path="location.longitude" /></span>
 				</div>
 			</div>
 
 			<div class="form-actions">
 				<c:choose>
-					<c:when test="${danger['new']}">
+					<c:when test="${dangerIsNew}">
 						<button type="submit">Add danger</button>
 					</c:when>
 					<c:otherwise>

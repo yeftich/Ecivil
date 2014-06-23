@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ecivil.model.event.Accident;
 import com.ecivil.model.event.Action;
 import com.ecivil.repository.ActionDao;
 import com.ecivil.service.ActionService;
@@ -44,5 +45,5 @@ public class ActionServiceImpl implements ActionService {
 	public void deleteAction(int actionId) throws DataAccessException {
 		actionDao.deleteAction(actionId);
 	}
-
+	
 }

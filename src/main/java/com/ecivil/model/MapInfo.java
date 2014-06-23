@@ -9,37 +9,43 @@ public class MapInfo {
 	private String id;
 	private String lat;
 	private String lon;
-	private String type;
+	private String type;	// used for drawing the map and different marker color
+	private String emtype;	// real emergency type in info
 	private String description;
 	private String started;
 	private String owner;
 	private String verified;
+	private String help;
+	private String invite;		// link for the invitation to participate in event
 	
 	public MapInfo() {
 		
 	}
 
 	// used like JSON for getting event with actions
-	public MapInfo(String id, String lat, String lon, String type,
+	public MapInfo(String id, String lat, String lon, String type, String emtype,
 			String description, String started, String owner, String verified) {
 		super();
 		this.id = id;
 		this.lat = lat;
 		this.lon = lon;
 		this.type = type;
+		this.emtype = emtype;
 		this.description = description;
 		this.started = started;
 		this.owner = owner;
 		this.verified = verified;
+		
 	}
 
 	// used li JSON for getting all emergencies with ajax
-	public MapInfo(String id, String lat, String lon, String type) {
+	public MapInfo(String id, String lat, String lon, String type, String help) {
 		super();
 		this.id = id;
 		this.lat = lat;
 		this.lon = lon;
 		this.type = type;
+		this.help = help;
 	}
 
 	public String getLat() {
@@ -105,5 +111,30 @@ public class MapInfo {
 	public void setVerified(String verified) {
 		this.verified = verified;
 	}
-	
+
+	public String getEmtype() {
+		return emtype;
+	}
+
+	public void setEmtype(String emtype) {
+		this.emtype = emtype;
+	}
+
+	public String getHelp() {
+		return help;
+	}
+
+	public void setHelp(String help) {
+		this.help = help;
+	}
+
+	public String getInvite() {
+		return invite;
+	}
+
+	public void setInvite(String invite) {
+		this.invite = invite;
+	}
+
+
 }

@@ -21,5 +21,7 @@ public interface EventService {
 	void verifyEvent(int eventId);
 	
 	void deleteEvent(int eventId);
+
+	void unVerifyEvent(int emergencyId);
 		
 }

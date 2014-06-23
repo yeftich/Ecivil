@@ -57,10 +57,10 @@
 			/* 			var event_info = $(this).attr('id').split("-");
 			 var event_id = null;
 			 *//* 							var event_lat = null;
-																																							 var event_lon = null; */
+																																																									 var event_lon = null; */
 			/* 		event_id = event_info[0].replace('eventId', '');
 			 *//* 							event_lat = event_info[1].replace('lat', '');
-																																								 event_lon = event_info[2].replace('lon', ''); */
+																																																										 event_lon = event_info[2].replace('lon', ''); */
 
 		});
 	});
@@ -176,7 +176,7 @@
 		r[++j] = '</dd><dt>Started</dt><dd>';
 		r[++j] = data[0].started;
 		r[++j] = '</dd><dt>Type</dt><dd>';
-		r[++j] = data[0].type;
+		r[++j] = data[0].emtype;
 		r[++j] = '</dd>	<dt>Created by</dt><dd>';
 		r[++j] = data[0].owner;
 		r[++j] = '</dd>	<dt>Verified</dt><dd>';
@@ -187,7 +187,7 @@
 		r = new Array();
 		j = -1;
 		r[++j] = '<tr><td colspan="3">Actions</td></tr>';
-		r[++j] = '<tr><td><em>Info</em></td><td><em>Start</em></td><td><em>User</em></td></tr>';
+		r[++j] = '<tr><td><em>Info</em></td><td><em>Start</em></td><td><em>User</em></td></td><td><em>Help</em></td></tr>';
 		for (var key = 1, size = data.length; key < size; key++) {
 			r[++j] = '<tr><td>';
 			r[++j] = data[key].description;
@@ -195,6 +195,8 @@
 			r[++j] = data[key].started;
 			r[++j] = '</td><td>';
 			r[++j] = data[key].owner;
+			r[++j] = '</td><td>';
+			r[++j] = data[key].help;
 			r[++j] = '</td></tr>';
 		}
 
@@ -348,9 +350,7 @@
 					row="emergency" theme="bootstrap2" cssClass="table table-striped"
 					paginate="false" info="false" sort="false">
 
-					<datatables:column title="Created date"
-						format="{0,dd/MM/yyyy HH:mm:ss}" sortType="natural"
-						sortInit="desc">
+					<datatables:column title="Created date">
 						<joda:format value="${emergency.createdDateTime}"
 							pattern="dd/MM/yyyy HH:mm:ss" />
 					</datatables:column>
@@ -383,6 +383,10 @@
 						var="verifyEmergencyUrl">
 						<spring:param name="emergencyId" value="${emergency.id}" />
 					</spring:url>
+					<spring:url value="/emergencys/{emergencyId}/unverify"
+						var="unVerifyEmergencyUrl">
+						<spring:param name="emergencyId" value="${emergency.id}" />
+					</spring:url>
 					<spring:url value="/emergencys/{emergencyId}/edit"
 						var="editEmergencyUrl">
 						<spring:param name="emergencyId" value="${emergency.id}" />
@@ -402,11 +406,21 @@
 								<c:otherwise>
 									<security:authorize
 										access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
+
 										<a href="${fn:escapeXml(newActionUrl)}" class="btn btn-mini">Participate</a>
-
-										<a href="${fn:escapeXml(verifyEmergencyUrl)}"
-											class="btn btn-mini">Verify</a>
-
+										<c:choose>
+											<c:when test="${emergency.verified}">
+												<a href="${fn:escapeXml(unVerifyEmergencyUrl)}"
+													class="btn btn-mini">Unverify</a>
+											</c:when>
+											<c:otherwise>
+												<a href="${fn:escapeXml(verifyEmergencyUrl)}"
+													class="btn btn-mini">Verify</a>
+											</c:otherwise>
+										</c:choose>
+									</security:authorize>
+									<security:authorize
+										access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_INSTITUTIONS_ADMIN')">
 										<a href="${fn:escapeXml(closeEmergencyUrl)}"
 											class="btn btn-mini">Close</a>
 									</security:authorize>

@@ -39,11 +39,9 @@ public abstract class Emergency extends Event implements Serializable {
 //		// TODO Auto-generated constructor stub
 //	}
 
-
-
-	@OneToMany(fetch = FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "emergency")
+	@OneToMany(fetch = FetchType.LAZY, cascade = javax.persistence.CascadeType.ALL, mappedBy = "emergency")
     private Set<Action> actions;
-
+	
 	public Set<Action> getActions() {
 		return actions;
 	}

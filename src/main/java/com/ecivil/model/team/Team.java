@@ -43,20 +43,16 @@ public class Team implements Serializable {
     private Integer id;
 	
     @Column(name = "team_name", unique = true)
-    @NotEmpty
     private String name;	
 
 	@Column(name = "team_address")
-	@NotEmpty
 	private String address;
 	
 	@Column(name = "team_telephone")
-	@NotEmpty
-	@Digits(fraction = 0, integer = 10)
+	/*@Digits(fraction = 0, integer = 10)*/
 	private String telephone;
 	
 	@Column(name = "team_email")
-	@NotEmpty
 	private String email;
 	
 //    @ManyToMany(fetch = FetchType.EAGER)

@@ -16,11 +16,20 @@
 		</div>
 		<jsp:include page="fragments/navBar.jsp" />
 
-		<h3>Welcome page</h3>
-		<p>
-			You have successfully logged in.<br /> <a
+		<h3>Create new accident</h3>
+
+
+		<div class="large-button-holder">
+			<a href='<spring:url value="/accidents/new" htmlEscape="true"/>'
+				class="mybutton big-btn">Create new accident</a>
+			<!-- 	<button class="mybutton big-btn" type="button">Create new
+						accident</button> -->
+		</div>
+
+		<%--  <a
 				href="${pageContext.request.contextPath}/index.html">Home page</a><br />
-		</p>
+ --%>
+
 	</div>
 </body>
 </html>

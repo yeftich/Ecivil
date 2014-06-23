@@ -3,6 +3,7 @@ package com.ecivil.web.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,17 @@ public class EmergencyController {
 
 		this.eventService.verifyEvent(emergencyId);
 
-		logger.debug("EMERGENCY CLOSED id = " + emergencyId);
+		logger.debug("EMERGENCY VERIFIED id = " + emergencyId);
+
+		return "redirect:/index";
+	}
+	
+	@RequestMapping(value = "/emergencys/{emergencyId}/unverify", method = RequestMethod.GET)
+	public String unVerifyEmergency(@PathVariable("emergencyId") int emergencyId) {
+
+		this.eventService.unVerifyEvent(emergencyId);
+		
+		logger.debug("EMERGENCY UNVERIFIED id = " + emergencyId);
 
 		return "redirect:/index";
 	}
@@ -106,20 +117,48 @@ public class EmergencyController {
 	}
 
 	// AJAX
+/*	@RequestMapping(value = "/ajax/messages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody
+	Message getMessageJSON() {
+		logger.debug("AJAX GET MESSAGES");
+		return new Message("This is test " + new Date().toString());
+	}
+	*/
+	
+	// AJAX
 	// get emergency with all its actions
 	@RequestMapping(value = "/ajax/event/{eventId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody
 	List<MapInfo> getEmergencyJSON(@PathVariable("eventId") int eventId) {
 		logger.debug("AJAX GET EMERGENCY with id " + eventId);
 
+		Map<Date, Action> sortedMap = new TreeMap<Date, Action>(
+				Collections.reverseOrder());
 		List<MapInfo> mapInfos = new ArrayList<MapInfo>();
 		Emergency emergency = this.emergencyService.findEmergencyById(eventId);
-
 		if (emergency != null) {
+			
 			DateTime emStartTime = emergency.getCreatedDateTime();
 			logger.debug("EMERGENCY: " + emergency.getTextDescription());
-			String type = (emergency instanceof Accident ? "Accident"
+			String emType = "";
+			String type = "";
+			Accident accident = null;
+			Danger danger = null;
+			if(emergency instanceof Accident) {
+				accident = this.accidentService.findAccidentById(emergency.getId());
+//				Accident a = (Accident) emergency;
+				emType = accident.getType();
+				type = "Accident";
+			}
+			else {
+				danger = this.dangerService.findDangerById(emergency.getId());
+				emType = danger.getType();
+				type = "Danger";
+			}
+			
+/*			String type = (emergency instanceof Accident ? "Accident"
 					: "Danger");
+*/			
 
 			// used for sending JSON result
 			String latitude = "0";
@@ -134,21 +173,36 @@ public class EmergencyController {
 				longitude = emergency.getLocation().getLongitude().toString();
 			}
 			MapInfo mapinfo = new MapInfo(emergency.getId().toString(),
-					latitude, longitude, type, emergency.getTextDescription(),
+					latitude, longitude, type, emType, emergency.getTextDescription(),
 					started, emergency.getOwner().getLogin(),
 					emergency.getCertification());
 			mapInfos.add(mapinfo);
 
-			Set<Action> actions = emergency.getActions();
-			for (Action action : actions) {
+			if(accident != null) {
+				for(Action action : accident.getActions()) {
+					sortedMap.put(action.getCreatedDateTime().toDate(), action);
+				}
+			}
+			else if(danger != null) {
+				for(Action action : danger.getActions()) {
+					sortedMap.put(action.getCreatedDateTime().toDate(), action);
+				}
+			}
+
+			for (Map.Entry<Date, Action> entry : sortedMap.entrySet()) {
 				// if it is institution green marker else blue marker
+				Action action = entry.getValue();
 				String volType = (action.getOwner().getRole().isInstitution() ? "actionInstIcon"
 						: "actionVolIcon");
-
+				String helping = "Yes";
+				if(action.getOwner().getRole().isMemeber()) {
+					helping = "No";
+				}
+				logger.debug("HELPING: " + helping);
 				MapInfo mInfo = new MapInfo(action.getId().toString(), action
 						.getOwner().getCurrent_location().getLatitude()
 						.toString(), action.getOwner().getCurrent_location()
-						.getLongitude().toString(), volType);
+						.getLongitude().toString(), volType, helping);
 				logger.debug("owners location: latlon --> "
 						+ action.getOwner().getCurrent_location().getLatitude()
 								.toString()
@@ -176,15 +230,15 @@ public class EmergencyController {
 		List<MapInfo> mapInfos = new ArrayList<MapInfo>();
 		List<Emergency> emergencies = this.emergencyService.getAllEmergencys();
 		if (emergencies != null) {
-			logger.debug("EMERGENCIES: " + emergencies.toString());
-			for (Emergency emergency : emergencies) {
+//			logger.debug("EMERGENCIES: " + emergencies.toString());
+			for (Emergency emergency : emergencies) {		
 				String type = (emergency instanceof Accident ? "Accident"
 						: "Danger");
 				if (emergency.hasValidLocation()) {
 					MapInfo mapinfo = new MapInfo(emergency.getId().toString(),
 							emergency.getLocation().getLatitude().toString(),
 							emergency.getLocation().getLongitude().toString(),
-							type);
+							type, "None");
 					mapInfos.add(mapinfo);
 				}
 			}

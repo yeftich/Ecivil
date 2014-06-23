@@ -13,6 +13,10 @@
 		</a>
 	</div>
 
+	<h1 id="logoText">
+		<fmt:message key="header.logo.text" />
+	</h1>
+
 	<div id="widgetBar">
 		<!--signIn widget-->
 		<security:authorize access="isAnonymous()">
@@ -49,10 +53,6 @@
 
 
 
-
-	<h1 id="logoText">
-		<fmt:message key="header.logo.text" />
-	</h1>
 
 
 </div>

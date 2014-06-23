@@ -15,21 +15,26 @@ ecivil :: a civil protection web application
 	var="bootstrapCss" />
 <link href="${bootstrapCss}" rel="stylesheet" />
 
-<spring:url value="/webjars/bootstrap/2.3.0/css/bootstrap-responsive.min.css"
+<spring:url value="/webjars/bootstrap/2.3.0/css/bootstrap-responsive.css"
 	var="bootstrapResponsiveCss" />
 	<link href="${bootstrapResponsiveCss}" rel="stylesheet" />
 
 <spring:url value="/resources/css/ecivil.css" var="ecivilCss" />
 <link href="${ecivilCss}" rel="stylesheet" />
 
+
+
 <spring:url value="/webjars/jquery/1.9.1/jquery.js" var="jQuery" />
-<script src="${jQuery}">
-	
-</script>
+<script src="${jQuery}"></script>
 
 <spring:url value="/webjars/jquery-validation/1.12.0/jquery.validate.js"
 	var="jQueryValidate" />
-<script src="${jQueryValidate}"></script>
+<script src="${jQueryValidate}">
+</script>
+
+<spring:url value="/webjars/bootstrap/2.3.0/js/bootstrap.js" var="bootstrapJsMin" />
+<script src="${bootstrapJsMin}">
+</script>
 
 <spring:url value="/resources/js/error_messages_el.js"
 	var="jQueryValidateErrorMessages" />

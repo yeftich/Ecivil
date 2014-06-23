@@ -46,17 +46,17 @@ body {
 	font-size: small;
 }
 
-.header {
+/* .header {
 	background-color: #c3e3e0;
 	height: 30px;
-}
-
+} */
+/* 
 .hideLongText {
 	height: 80px;
 	padding: 0px 5px;
 	overflow: hidden;
 	text-overflow: ellipsis
-}
+} */
 
 /* new version css */
 
@@ -72,23 +72,22 @@ body {
 		width: 150px;
 		float: left;
 	}
-	
 	#logoText {
 		float: left;
 		/* font styles apply to text within alt tags */
 		font-family: "Trebuchet MS", Helvetica, sans-serif;
 		color: white;
+		font-size: 2.6em;
 	}
 	#widgetBar {
 		height: 50px;
-		width: 790px;
-		float: left;
+		float: right;
 	}
 	.headerWidget {
 		display: block;
 		width: 120px;
 		margin: 10px 10px 0px 0px;
-		font-size: small;
+		font-size: 1em;
 		font-weight: bold;
 		color: #FFF;
 		float: right;
@@ -111,23 +110,22 @@ body {
 		width: 124px;
 		float: left;
 	}
-	
 	#logoText {
 		float: left;
 		/* font styles apply to text within alt tags */
 		font-family: "Trebuchet MS", Helvetica, sans-serif;
 		color: white;
+		font-size: 2.15em;
 	}
 	#widgetBar {
 		height: 42px;
-		width: 658px;
-		float: left;
+		float: right;
 	}
 	.headerWidget {
 		display: block;
 		width: 100px;
 		margin: 8px 8px 0px 0px;
-		font-size: small;
+		font-size: 0.83em;
 		font-weight: bold;
 		color: #FFF;
 		float: right;
@@ -141,36 +139,35 @@ body {
 /* Landscape phone to portrait tablet */
 @media screen and (max-width: 640px) {
 	#header {
-		height: 170px;
-		background: url('../images/masthead-bkg-mw960.jpg') no-repeat scroll
+		height: 114px;
+		background: url('../images/masthead-bkg-mw640.jpg') no-repeat scroll
 			left center;
 	}
 	#logo {
-		height: 150px;
-		width: 150px;
+		height: 100px;
+		width: 100px;
 		float: left;
 	}
-	
 	#logoText {
 		float: left;
 		/* font styles apply to text within alt tags */
 		font-family: "Trebuchet MS", Helvetica, sans-serif;
 		color: white;
+		font-size: 1.7em;
 	}
 	#widgetBar {
-		height: 50px;
-		width: 790px;
-		float: left;
+		height: 34px;
+		float: right;
 	}
 	.headerWidget {
 		display: block;
-		width: 120px;
-		margin: 10px 10px 0px 0px;
-		font-size: small;
+		width: 80px;
+		margin: 6px 6px 0px 0px;
+		font-size: 0.63em;
 		font-weight: bold;
 		color: #FFF;
 		float: right;
-		line-height: 25px;
+		line-height: 16px;
 		background-color: #003366;
 		border: solid 1px #FFF;
 		text-align: center;
@@ -180,36 +177,35 @@ body {
 /* Landscape phones and smaller */
 @media screen and (max-width: 480px) {
 	#header {
-		height: 170px;
-		background: url('../images/masthead-bkg-mw960.jpg') no-repeat scroll
+		height: 86px;
+		background: url('../images/masthead-bkg-mw480.jpg') no-repeat scroll
 			left center;
 	}
 	#logo {
-		height: 150px;
-		width: 150px;
+		height: 74px;
+		width: 74px;
 		float: left;
 	}
-	
 	#logoText {
 		float: left;
 		/* font styles apply to text within alt tags */
 		font-family: "Trebuchet MS", Helvetica, sans-serif;
 		color: white;
+		font-size: 1.25em;
 	}
 	#widgetBar {
-		height: 50px;
-		width: 790px;
-		float: left;
+		height: 26px;
+		float: right;
 	}
 	.headerWidget {
 		display: block;
-		width: 120px;
-		margin: 10px 10px 0px 0px;
-		font-size: small;
+		width: 60px;
+		margin: 4px 4px 0px 0px;
+		font-size: 0.48em;
 		font-weight: bold;
 		color: #FFF;
 		float: right;
-		line-height: 25px;
+		line-height: 12px;
 		background-color: #003366;
 		border: solid 1px #FFF;
 		text-align: center;
@@ -295,6 +291,57 @@ input[type="text"] {
 	padding: 8px;
 	margin: 16px;
 }
+
+.large-button-holder {
+	max-width: 320px;
+	max-height: 280px;
+	line-height: 280px;
+	display: block;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.large-button-holder a:hover {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.mybutton {
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #e75955),
+		color-stop(1, #3165BF));
+	background-image: -o-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: -moz-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: -webkit-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: -ms-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: linear-gradient(to bottom, #e75955 0%, #c03932 100%);
+	color: #FFFFFF;
+	font-size: 2em;
+	font-weight: bold;
+	float: right;
+	padding: 10px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-image: -o-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: -moz-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: -webkit-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: -ms-linear-gradient(bottom, #e75955 0%, #c03932 100%);
+	background-image: linear-gradient(to bottom, #e75955 0%, #c03932 100%);
+	background-color: #e75955;
+	float: right;
+}
+
+.big-btn {
+	width: 320px;
+	height: 280px;
+}
+
+/* #add-accident-button {
+    width: 480px;
+    height: 300px;
+	display: block;
+} */
 
 /* panels */
 
@@ -389,6 +436,10 @@ input[type="text"] {
 #map-canvas {
 	width: 100%;
 	height: 400px;
+}
+
+#event-info-panel {
+	padding-left: 20px;
 }
 
 /* hr {

@@ -16,13 +16,16 @@ public class DateTimeFormatBuilder {
 	public DateTimeFormatBuilder() {
 		this.periodFormatter = new PeriodFormatterBuilder()
 	    .appendDays()
-	    .appendSuffix(" day", " days")
-	    .appendSeparator(" , ")
+//	    .appendSuffix(" day", " days")
+	    .appendSuffix("d", "d")
+	    .appendSeparator(",")
 	    .appendMinutes()
-	    .appendSuffix(" minute", " minutes")
-	    .appendSeparator(" , ")
+	    .appendSuffix("m", "m")
+//	    .appendSuffix(" minute", " minutes")
+	    .appendSeparator(",")
 	    .appendSeconds()
-	    .appendSuffix(" second", " seconds")
+//	    .appendSuffix(" second", " seconds")
+.appendSuffix("s", "s")
 	    .toFormatter(); 
 	}
 	

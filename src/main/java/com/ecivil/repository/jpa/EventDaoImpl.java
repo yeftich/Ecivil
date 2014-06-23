@@ -58,6 +58,17 @@ public class EventDaoImpl implements EventDao{
 			query.executeUpdate();		
 	}
 	
+	
+	@Override
+	public void unVerifyEvent(int eventId) throws DataAccessException {
+		Query query = this.em.createNamedQuery("updateCertificationNativeSQL")
+				.setParameter("certification", EVerification.Unverified.inGreek())
+				.setParameter("eventId", eventId);
+
+			query.executeUpdate();		
+	}
+	
+	
 	@Override
 	public void deleteEvent(int eventId) throws DataAccessException {
 		Event event = em.find(Event.class, eventId);

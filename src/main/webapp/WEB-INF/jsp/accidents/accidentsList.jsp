@@ -15,7 +15,6 @@
 <jsp:include page="../fragments/headTag.jsp" />
 
 
-
 </head>
 <body>
 	<!-- <script>

@@ -48,16 +48,16 @@ public class TeamController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id");
 	}
-	
-    @ModelAttribute("teamtypes")
-    public Collection<TeamType> populateTeamTypes() {
-        return this.teamService.getAllTeamTypes();
-    }
-    
-    @ModelAttribute("users")
-    public Collection<User> populateUsers() {
-        return this.userService.getAllUsers();
-    }
+
+	@ModelAttribute("teamtypes")
+	public Collection<TeamType> populateTeamTypes() {
+		return this.teamService.getAllTeamTypes();
+	}
+
+	@ModelAttribute("users")
+	public Collection<User> populateUsers() {
+		return this.userService.getAllUsers();
+	}
 
 	@RequestMapping(value = "/teams/new", method = RequestMethod.GET)
 	public String initCreationForm(Map<String, Object> model) {
@@ -69,14 +69,16 @@ public class TeamController {
 	}
 
 	@RequestMapping(value = "/teams/new", method = RequestMethod.POST)
-	public String processCreationForm(@ModelAttribute("team") Team team, BindingResult result,
-			SessionStatus status) {
+	public String processCreationForm(@ModelAttribute("team") Team team,
+			BindingResult result, SessionStatus status) {
 		logger.debug("proccessCreationForm for new team");
 
 		if (result.hasErrors()) {
 			return "teams/createOrUpdateTeamForm";
 		} else {
+			logger.debug("TEAM SAVE START");
 			this.teamService.saveTeam(team);
+			logger.debug("TEAM SAVE END");
 			status.setComplete();
 			return "redirect:/teams/" + team.getId();
 		}
@@ -94,20 +96,9 @@ public class TeamController {
 		List<Team> results = new ArrayList<Team>();
 
 		// allow parameterless GET request for /teams to return all records
-		if (team.getName() == null) {
-			results = (List<Team>) this.teamService.getAllTeams();
-		} else {
-			// find team by name
-			Team teamFromDB = this.teamService.getTeamByName(team.getName());
-			if (teamFromDB != null) {
-				results.add(teamFromDB);
-			}
-			else {
-				result.rejectValue("name", "notFound", "not found");
-				return "teams/findTeams";
-			}
-		}
+		results = (List<Team>) this.teamService.getAllTeams();
 		model.put("itemList", results);
+		
 		return "teams/teamsList";
 	}
 
@@ -120,12 +111,13 @@ public class TeamController {
 	}
 
 	@RequestMapping(value = "/teams/{teamId}/edit", method = RequestMethod.PUT)
-	public String processUpdateTeamForm(@PathVariable("teamId") int teamId, @ModelAttribute("team") Team team, BindingResult result,
+	public String processUpdateTeamForm(@PathVariable("teamId") int teamId,
+			@ModelAttribute("team") Team team, BindingResult result,
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			return "teams/createOrUpdateTeamForm";
 		} else {
-			if(team.getId() == null) {
+			if (team.getId() == null) {
 				team.setId(teamId);
 			}
 			this.teamService.saveTeam(team);
@@ -134,16 +126,17 @@ public class TeamController {
 		}
 	}
 
-	@RequestMapping(value="/teams/{teamId}/delete", method=RequestMethod.GET)
-    public ModelAndView deleteTeam(@PathVariable Integer teamId) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/teams");
-        teamService.deleteTeam(teamId);
-        modelAndView.addObject("itemList", (List<Team>) this.teamService.getAllTeams());
-        String message = "Team was successfully deleted.";
-        modelAndView.addObject("message", message);
-        return modelAndView;
-    }
-	
+	@RequestMapping(value = "/teams/{teamId}/delete", method = RequestMethod.GET)
+	public ModelAndView deleteTeam(@PathVariable Integer teamId) {
+		ModelAndView modelAndView = new ModelAndView("redirect:/teams");
+		teamService.deleteTeam(teamId);
+		modelAndView.addObject("itemList",
+				(List<Team>) this.teamService.getAllTeams());
+		String message = "Team was successfully deleted.";
+		modelAndView.addObject("message", message);
+		return modelAndView;
+	}
+
 	/**
 	 * Custom handler for displaying an team.
 	 * 

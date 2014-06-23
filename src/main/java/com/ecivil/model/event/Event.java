@@ -121,6 +121,15 @@ public abstract class Event implements Serializable {
 			return false;
 		}
 	}
+	
+	public boolean isVerified() {
+		if(this.certification.equals(EVerification.Verified.inGreek())) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
     
 	public Integer getId() {
 		return id;

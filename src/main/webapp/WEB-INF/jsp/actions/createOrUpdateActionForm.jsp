@@ -8,6 +8,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="ecivil" tagdir="/WEB-INF/tags"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="security"%>
 
 <jsp:include page="../fragments/headTag.jsp" />
 </head>
@@ -37,7 +39,7 @@
 			class="form-horizontal" id="add-action-form">
 
 			<div class="control-group">
-				<label class="control-label">Description </label>
+				<label class="control-label">Message </label>
 
 				<div class="controls">
 					<form:textarea path="textDescription" rows="5" cols="30" />
@@ -45,20 +47,22 @@
 							path="textDescription" /></span>
 				</div>
 			</div>
-			
-			<div class="control-group">
-				<label class="control-label">Tool </label>
 
-				<div class="controls">
-					<form:input path="tool" />
-					<span class="help-inline"><form:errors path="tool" /></span>
+			<security:authorize
+				access="hasAnyRole('ROLE_ADMIN', 'ROLE_INSTITUTION', 'ROLE_VOLUNTEER', 'ROLE_INSTITUTIONS_ADMIN','ROLE_VOLUNTEERS_ADMIN')">
+				<div class="control-group">
+					<label class="control-label">Tool </label>
+
+					<div class="controls">
+						<form:input path="tool" />
+						<span class="help-inline"><form:errors path="tool" /></span>
+					</div>
 				</div>
-			</div>
-
+			</security:authorize>
 			<div class="form-actions">
 				<c:choose>
 					<c:when test="${action['new']}">
-						<button type="submit">Add action</button>
+						<button type="submit">Send</button>
 					</c:when>
 					<c:otherwise>
 						<button type="submit">Update action</button>
