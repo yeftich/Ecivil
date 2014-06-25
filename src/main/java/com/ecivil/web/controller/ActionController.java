@@ -83,7 +83,8 @@ public class ActionController {
 			action.setEmergency(emergency);
 			this.actionService.saveAction(action);
 			status.setComplete();
-			return "redirect:/actions/" + action.getId();
+//			return "redirect:/actions/" + action.getId();
+			return "redirect:/index";
 		}
 	}
 

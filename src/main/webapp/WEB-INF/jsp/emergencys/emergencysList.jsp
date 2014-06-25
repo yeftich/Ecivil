@@ -347,7 +347,7 @@
 			<c:when test="${fn:length(itemList) > 0}">
 
 				<datatables:table id="emergencys" data="${itemList}" cdn="true"
-					row="emergency" theme="bootstrap2" cssClass="table table-striped"
+					row="emergency" theme="bootstrap2" scrollX="100%" cssClass="table table-striped"
 					paginate="false" info="false" sort="false">
 
 					<datatables:column title="Created date">
